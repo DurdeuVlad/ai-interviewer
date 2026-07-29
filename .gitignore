@@ -4,6 +4,10 @@ __pycache__/
 .venv/
 *.egg-info/
 
+# uv lockfiles should be committed for reproducible installs
+# (overrides a global *.lock ignore some machines have configured)
+!**/uv.lock
+
 # Env / secrets
 .env
 !.env.example
