@@ -4,6 +4,13 @@ Usage:
     uv run python -m app.cli
 """
 
+import os
+import sys
+
+if os.name == "nt":
+    os.system("chcp 65001 >NUL")
+    sys.stdout.reconfigure(encoding="utf-8")
+
 from app import config
 from app.db import get_session, init_db
 from app.providers.factory import get_provider

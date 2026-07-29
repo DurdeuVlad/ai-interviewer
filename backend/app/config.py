@@ -15,7 +15,7 @@ CLAUDE_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-sonnet-5")
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-flash-latest")
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-5.6")
