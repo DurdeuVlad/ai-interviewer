@@ -9,6 +9,23 @@ from app import config
 from app.models import Interview, Summary
 from app.services import orchestrator
 
+# fpdf2's core "Helvetica" font only supports Latin-1. Real model output routinely
+# contains smart quotes/dashes outside that range - transliterate the common ones
+# to ASCII, then fall back to dropping anything else rather than crashing the export.
+_PDF_TRANSLITERATIONS = {
+    "‘": "'", "’": "'",  # single smart quotes
+    "“": '"', "”": '"',  # double smart quotes
+    "–": "-", "—": "-",  # en/em dash
+    "…": "...",  # ellipsis
+    " ": " ",  # non-breaking space
+}
+
+
+def _sanitize_pdf_text(text: str) -> str:
+    for unicode_char, ascii_equivalent in _PDF_TRANSLITERATIONS.items():
+        text = text.replace(unicode_char, ascii_equivalent)
+    return text.encode("latin-1", errors="replace").decode("latin-1")
+
 
 def _interview_payload(session: Session, interview_id: int) -> dict:
     interview = session.get(Interview, interview_id)
@@ -46,7 +63,7 @@ def export_json(session: Session, interview_id: int) -> Path:
 
 def _line(pdf: FPDF, text: str, size: int = 11, bold: bool = False, height: int = 6) -> None:
     pdf.set_font("Helvetica", "B" if bold else "", size)
-    pdf.multi_cell(0, height, text, new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.multi_cell(0, height, _sanitize_pdf_text(text), new_x=XPos.LMARGIN, new_y=YPos.NEXT)
 
 
 def export_pdf(session: Session, interview_id: int) -> Path:

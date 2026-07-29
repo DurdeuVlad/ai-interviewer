@@ -17,6 +17,20 @@ from app.providers.factory import get_provider
 from app.services import analysis, export, orchestrator
 
 
+class _QuestionStreamer:
+    """Prints the 'Q: ' prefix lazily, on first delta - stays silent entirely if
+    a turn ends with done=True and no question ever arrives."""
+
+    def __init__(self) -> None:
+        self.started = False
+
+    def __call__(self, text: str) -> None:
+        if not self.started:
+            print("Q: ", end="", flush=True)
+            self.started = True
+        print(text, end="", flush=True)
+
+
 def _print_summary(summary) -> None:
     print("\n=== Summary ===")
     for theme in summary.themes:
@@ -40,13 +54,20 @@ def main() -> None:
     while not topic:
         topic = input("Please enter a topic: ").strip()
 
-    interview, question = orchestrator.start_interview(session, provider, topic)
+    print()
+    streamer = _QuestionStreamer()
+    interview, question = orchestrator.start_interview(session, provider, topic, on_delta=streamer)
+    if streamer.started:
+        print()
 
     while True:
-        print(f"\nQ: {question}")
         answer = input("> ")
-        print("[thinking...]")
-        question, done = orchestrator.submit_answer(session, provider, interview.id, answer)
+        streamer = _QuestionStreamer()
+        question, done = orchestrator.submit_answer(
+            session, provider, interview.id, answer, on_delta=streamer
+        )
+        if streamer.started:
+            print()
         if done:
             break
 
