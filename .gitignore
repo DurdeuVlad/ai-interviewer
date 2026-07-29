@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# Env / secrets
+.env
+!.env.example
+
+# SQLite runtime DB
+*.db
+*.db-journal
+
+# Exports (user-generated transcripts, not repo content)
+backend/exports/*
+!backend/exports/.gitkeep
+
+# Node / frontend
+node_modules/
+dist/
+
+# OS
+.DS_Store
+Thumbs.db
