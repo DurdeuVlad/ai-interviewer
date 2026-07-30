@@ -62,6 +62,7 @@ def _print_debug(interview, reasoning: str | None) -> None:
     )
     print(Fore.BLACK + Style.BRIGHT + f"  [debug] reasoning: {reasoning or '(none)'}" + Style.RESET_ALL)
     print(Fore.BLACK + Style.BRIGHT + f"  [debug] checklist: {checklist_state}" + Style.RESET_ALL)
+    print(Fore.BLACK + Style.BRIGHT + f"  [debug] injection risk (cumulative): {interview.risk_score:.2f}" + Style.RESET_ALL)
 
 
 def _sentiment_label(score: float) -> str:

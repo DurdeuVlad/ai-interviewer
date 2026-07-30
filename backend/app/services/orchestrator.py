@@ -104,8 +104,22 @@ def submit_answer(
     next_question = result.next_question
     reasoning = result.reasoning
 
-    if completed_turns < config.MIN_TURNS and done:
-        # Backend invariant: the model never needs to know about this floor.
+    # Injection risk accumulates across turns regardless of anything else below - even a
+    # bail the model doesn't act on should still count toward the cumulative backstop.
+    interview.risk_score = min(1.0, interview.risk_score + result.injection_risk)
+
+    confident_injection_bail = done and result.injection_risk >= config.INJECTION_IMMEDIATE_BAILOUT
+    if confident_injection_bail:
+        logger.warning(
+            "Provider confidently flagged prompt injection (risk=%.2f) at turn %d - bailing immediately, MIN_TURNS not enforced for security bails.",
+            result.injection_risk,
+            completed_turns,
+        )
+
+    if completed_turns < config.MIN_TURNS and done and not confident_injection_bail:
+        # Backend invariant: the model never needs to know about this floor. Doesn't apply
+        # to a confident injection bail above - forcing 3 questions on an actively
+        # malicious user defeats the point of ending quickly.
         logger.info(
             "Provider signaled done at turn %d, below MIN_TURNS=%d - overriding.",
             completed_turns,
@@ -118,6 +132,19 @@ def submit_answer(
             next_question = f"Is there anything else about {interview.topic} you'd like to share?"
             on_delta(next_question)
         reasoning = f"Backend floor override (model signaled done at turn {completed_turns} < MIN_TURNS={config.MIN_TURNS}). {reasoning or ''}".strip()
+
+    if not done and interview.risk_score >= config.INJECTION_CUMULATIVE_BAILOUT:
+        # Defense in depth: even if no single turn was scored confidently enough to bail on
+        # its own, repeated smaller flags accumulate here and the backend enforces the stop
+        # itself rather than trusting the model's per-turn judgment alone.
+        logger.warning(
+            "Cumulative injection risk %.2f >= %.2f - backend forcing bail.",
+            interview.risk_score,
+            config.INJECTION_CUMULATIVE_BAILOUT,
+        )
+        done = True
+        next_question = None
+        reasoning = f"Backend security bailout: cumulative injection risk {interview.risk_score:.2f} >= {config.INJECTION_CUMULATIVE_BAILOUT}. {reasoning or ''}".strip()
 
     interview.checklist = [item.model_dump() for item in result.checklist]
 

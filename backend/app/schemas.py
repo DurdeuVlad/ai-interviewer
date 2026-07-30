@@ -12,6 +12,7 @@ class InterviewTurnResult(BaseModel):
     next_question: str | None
     done: bool
     reasoning: str | None = None  # debug-only: model's one-line rationale for this turn
+    injection_risk: float = 0.0  # 0.0 (normal answer) to 1.0 (blatant manipulation attempt)
 
 
 class Theme(BaseModel):

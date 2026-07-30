@@ -10,6 +10,24 @@ from app.schemas import (
 
 _ASPECTS = ["how they use it day to day", "what worries them about it", "what they'd change about it"]
 
+# Simple keyword heuristic so the backend's injection-risk bail-out logic can be tested
+# without spending a real API call - real providers assess this via the LLM itself.
+_INJECTION_MARKERS = (
+    "ignore all instructions",
+    "ignore previous instructions",
+    "ignore all previous instructions",
+    "system override",
+    "reveal your",
+    "you are now dan",
+    "developer mode",
+)
+
+
+def _assess_injection_risk(history: list[HistoryMessage]) -> float:
+    last_user = next((m.content for m in reversed(history) if m.role == "user"), "")
+    lowered = last_user.lower()
+    return 0.95 if any(marker in lowered for marker in _INJECTION_MARKERS) else 0.0
+
 
 class MockProvider(LLMProvider):
     """Deterministic, no-network provider for dev/demo/tests.
@@ -31,6 +49,16 @@ class MockProvider(LLMProvider):
             ]
         else:
             checklist = [item.model_copy() for item in checklist]
+
+        injection_risk = _assess_injection_risk(history)
+        if injection_risk >= 0.9:
+            return InterviewTurnResult(
+                checklist=checklist,
+                next_question=None,
+                done=True,
+                reasoning="[mock] Detected a prompt-injection attempt, bailing out.",
+                injection_risk=injection_risk,
+            )
 
         answered_count = sum(1 for m in history if m.role == "user")
         covered_so_far = min(answered_count, len(checklist))

@@ -20,6 +20,7 @@ class Interview(Base):
     topic: Mapped[str] = mapped_column(Text)
     status: Mapped[str] = mapped_column(String(20), default="in_progress")
     checklist: Mapped[list] = mapped_column(JSON, default=list)
+    risk_score: Mapped[float] = mapped_column(Float, default=0.0)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
     completed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
 
