@@ -168,6 +168,13 @@ def main() -> None:
             streamer.finish()
             _print_debug(interview, reasoning)
             if done:
+                if streamer.started:
+                    # A question was already streamed live this turn before a backend
+                    # override (e.g. the cumulative injection-risk backstop) discarded it
+                    # and ended the interview - without this, the person just sees a
+                    # question appear and then the app abruptly moves on, which reads as
+                    # broken rather than intentional.
+                    print(Fore.YELLOW + "\n(Wrapping up here rather than continuing.)" + Style.RESET_ALL)
                 break
 
         print(Fore.YELLOW + "\nInterview complete. Generating summary..." + Style.RESET_ALL)
