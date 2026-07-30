@@ -44,6 +44,7 @@ def _interview_payload(session: Session, interview_id: int) -> dict:
         "summary": {
             "themes": summary.themes,
             "key_points": summary.key_points,
+            "feedback": summary.feedback,
             "keyword_extract": summary.keyword_extract,
             "sentiment_score": summary.sentiment_score,
         }
@@ -93,6 +94,15 @@ def export_pdf(session: Session, interview_id: int) -> Path:
         _line(pdf, "Key points", bold=True)
         for point in payload["summary"]["key_points"]:
             _line(pdf, f"- {point}")
+
+        feedback = payload["summary"].get("feedback") or {}
+        if feedback.get("positives") or feedback.get("constructive"):
+            pdf.ln(2)
+            _line(pdf, "Feedback on the interview", bold=True)
+            for point in feedback.get("positives", []):
+                _line(pdf, f"+ {point}")
+            for point in feedback.get("constructive", []):
+                _line(pdf, f"- {point}")
 
         pdf.ln(2)
         _line(pdf, f"Keywords: {', '.join(payload['summary']['keyword_extract'])}", size=10)

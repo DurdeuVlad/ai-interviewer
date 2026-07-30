@@ -3,7 +3,14 @@ from google.genai import types
 
 from app import config
 from app.providers.base import LLMProvider
-from app.schemas import AnalysisResult, ChecklistItem, HistoryMessage, InterviewTurnResult, Theme
+from app.schemas import (
+    AnalysisResult,
+    ChecklistItem,
+    HistoryMessage,
+    InterviewFeedback,
+    InterviewTurnResult,
+    Theme,
+)
 
 _INTERVIEW_FUNCTION = types.FunctionDeclaration(
     name="interview_turn",
@@ -66,8 +73,17 @@ _ANALYSIS_FUNCTION = types.FunctionDeclaration(
                 type="ARRAY",
                 items=types.Schema(type="STRING"),
             ),
+            "feedback": types.Schema(
+                type="OBJECT",
+                description="Feedback on how the person engaged in the interview, not on the topic content.",
+                properties={
+                    "positives": types.Schema(type="ARRAY", items=types.Schema(type="STRING")),
+                    "constructive": types.Schema(type="ARRAY", items=types.Schema(type="STRING")),
+                },
+                required=["positives", "constructive"],
+            ),
         },
-        required=["themes", "key_points"],
+        required=["themes", "key_points", "feedback"],
     ),
 )
 
@@ -162,4 +178,5 @@ class GeminiProvider(LLMProvider):
         return AnalysisResult(
             themes=[Theme(**theme) for theme in data.get("themes", [])],
             key_points=data.get("key_points", []),
+            feedback=InterviewFeedback(**data.get("feedback", {"positives": [], "constructive": []})),
         )

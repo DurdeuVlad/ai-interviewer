@@ -42,6 +42,7 @@ class Summary(Base):
     interview_id: Mapped[int] = mapped_column(ForeignKey("interviews.id"), unique=True)
     themes: Mapped[list] = mapped_column(JSON, default=list)
     key_points: Mapped[list] = mapped_column(JSON, default=list)
+    feedback: Mapped[dict] = mapped_column(JSON, default=dict)
     keyword_extract: Mapped[list] = mapped_column(JSON, default=list)
     sentiment_score: Mapped[float | None] = mapped_column(Float, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)

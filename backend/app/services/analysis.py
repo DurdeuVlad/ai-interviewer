@@ -50,6 +50,7 @@ def run_analysis(session: Session, provider: LLMProvider, interview_id: int) -> 
         interview_id=interview_id,
         themes=[theme.model_dump() for theme in result.themes],
         key_points=result.key_points,
+        feedback=result.feedback.model_dump(),
         keyword_extract=_extract_keywords(answers_text),
         sentiment_score=_score_sentiment(answers_text) if answers_text else None,
     )

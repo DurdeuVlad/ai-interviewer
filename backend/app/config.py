@@ -30,3 +30,6 @@ MAX_TURNS = 8
 
 RETRY_ATTEMPTS = 1
 RETRY_BACKOFF_SECONDS = 2
+
+# Terminal UX: per-character delay while "typing" streamed question text, seconds.
+TYPING_DELAY_SECONDS = float(os.getenv("TYPING_DELAY_SECONDS", "0.015"))

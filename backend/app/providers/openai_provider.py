@@ -5,7 +5,14 @@ from openai import OpenAI
 
 from app import config
 from app.providers.base import LLMProvider, OnDelta
-from app.schemas import AnalysisResult, ChecklistItem, HistoryMessage, InterviewTurnResult, Theme
+from app.schemas import (
+    AnalysisResult,
+    ChecklistItem,
+    HistoryMessage,
+    InterviewFeedback,
+    InterviewTurnResult,
+    Theme,
+)
 
 _INTERVIEW_TOOL = {
     "type": "function",
@@ -70,8 +77,17 @@ _ANALYSIS_TOOL = {
                 "type": "array",
                 "items": {"type": "string"},
             },
+            "feedback": {
+                "type": "object",
+                "description": "Feedback on how the person engaged in the interview, not on the topic content.",
+                "properties": {
+                    "positives": {"type": "array", "items": {"type": "string"}},
+                    "constructive": {"type": "array", "items": {"type": "string"}},
+                },
+                "required": ["positives", "constructive"],
+            },
         },
-        "required": ["themes", "key_points"],
+        "required": ["themes", "key_points", "feedback"],
     },
 }
 
@@ -218,4 +234,5 @@ class OpenAIProvider(LLMProvider):
         return AnalysisResult(
             themes=[Theme(**theme) for theme in data.get("themes", [])],
             key_points=data.get("key_points", []),
+            feedback=InterviewFeedback(**data.get("feedback", {"positives": [], "constructive": []})),
         )

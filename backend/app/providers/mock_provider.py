@@ -1,5 +1,12 @@
 from app.providers.base import LLMProvider
-from app.schemas import AnalysisResult, ChecklistItem, HistoryMessage, InterviewTurnResult, Theme
+from app.schemas import (
+    AnalysisResult,
+    ChecklistItem,
+    HistoryMessage,
+    InterviewFeedback,
+    InterviewTurnResult,
+    Theme,
+)
 
 _ASPECTS = ["how they use it day to day", "what worries them about it", "what they'd change about it"]
 
@@ -50,4 +57,8 @@ class MockProvider(LLMProvider):
                 Theme(name=f"General view on {topic}", sentiment="neutral", quote=quote),
             ],
             key_points=answers,
+            feedback=InterviewFeedback(
+                positives=["[mock] Answered every question without skipping."],
+                constructive=["[mock] Some answers could have included more concrete detail."],
+            ),
         )

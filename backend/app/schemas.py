@@ -20,9 +20,15 @@ class Theme(BaseModel):
     quote: str
 
 
+class InterviewFeedback(BaseModel):
+    positives: list[str]
+    constructive: list[str]
+
+
 class AnalysisResult(BaseModel):
     themes: list[Theme]
     key_points: list[str]
+    feedback: InterviewFeedback
 
 
 class HistoryMessage(BaseModel):
