@@ -11,6 +11,7 @@ if os.name == "nt":
     os.system("chcp 65001 >NUL")
     sys.stdout.reconfigure(encoding="utf-8")
 
+from app import config
 from app.db import get_session, init_db
 from app.providers.factory import get_provider
 from app.services import analysis, export, orchestrator
@@ -28,6 +29,16 @@ class _QuestionStreamer:
             print("Q: ", end="", flush=True)
             self.started = True
         print(text, end="", flush=True)
+
+
+def _print_debug(interview, reasoning: str | None) -> None:
+    if not config.DEBUG_MODE:
+        return
+    checklist_state = ", ".join(
+        f"{item['id']}:{'done' if item['covered'] else 'open'}" for item in interview.checklist
+    )
+    print(f"  [debug] reasoning: {reasoning or '(none)'}")
+    print(f"  [debug] checklist: {checklist_state}")
 
 
 def _print_summary(summary) -> None:
@@ -55,18 +66,22 @@ def main() -> None:
 
     print()
     streamer = _QuestionStreamer()
-    interview, question = orchestrator.start_interview(session, provider, topic, on_delta=streamer)
+    interview, question, reasoning = orchestrator.start_interview(
+        session, provider, topic, on_delta=streamer
+    )
     if streamer.started:
         print()
+    _print_debug(interview, reasoning)
 
     while True:
         answer = input("> ")
         streamer = _QuestionStreamer()
-        question, done = orchestrator.submit_answer(
+        question, done, reasoning = orchestrator.submit_answer(
             session, provider, interview.id, answer, on_delta=streamer
         )
         if streamer.started:
             print()
+        _print_debug(interview, reasoning)
         if done:
             break
 

@@ -4,8 +4,7 @@ import re
 from openai import OpenAI
 
 from app import config
-from app.providers.base import OnDelta
-from app.providers.base import LLMProvider
+from app.providers.base import LLMProvider, OnDelta
 from app.schemas import AnalysisResult, ChecklistItem, HistoryMessage, InterviewTurnResult, Theme
 
 _INTERVIEW_TOOL = {
@@ -36,8 +35,12 @@ _INTERVIEW_TOOL = {
                 "type": "boolean",
                 "description": "True if the checklist is fully covered and the interview should end.",
             },
+            "reasoning": {
+                "type": "string",
+                "description": "One short sentence, for internal debugging only, never shown to the person: what you picked up on in their last answer and why you're asking this next question.",
+            },
         },
-        "required": ["checklist", "next_question", "done"],
+        "required": ["checklist", "next_question", "done", "reasoning"],
     },
 }
 
@@ -93,6 +96,15 @@ def _history_to_input(history: list[HistoryMessage]) -> list[dict]:
     return [{"role": m.role, "content": m.content} for m in history]
 
 
+def _checklist_state_block(checklist: list[ChecklistItem]) -> str:
+    # The model has no memory between calls - without resending its own prior
+    # checklist as authoritative state, it reinvents item ids/wording each turn.
+    if not checklist:
+        return ""
+    lines = "\n".join(f"- {c.id}: {c.text} [{'covered' if c.covered else 'open'}]" for c in checklist)
+    return f"\n\nCurrent checklist state (authoritative - reuse these exact ids, don't invent new ones):\n{lines}"
+
+
 def _extract_tool_call(response, tool_name: str) -> dict:
     for item in response.output:
         if getattr(item, "type", None) == "function_call" and item.name == tool_name:
@@ -116,7 +128,7 @@ class OpenAIProvider(LLMProvider):
         checklist: list[ChecklistItem],
         history: list[HistoryMessage],
     ) -> InterviewTurnResult:
-        system_prompt = self._interviewer_prompt.format(topic=topic)
+        system_prompt = self._interviewer_prompt.format(topic=topic) + _checklist_state_block(checklist)
         input_ = _history_to_input(history) or [
             {"role": "user", "content": "(interview is starting, ask your first question)"}
         ]
@@ -132,6 +144,7 @@ class OpenAIProvider(LLMProvider):
             checklist=[ChecklistItem(**item) for item in data.get("checklist", [])],
             next_question=data.get("next_question") or None,
             done=bool(data.get("done", False)),
+            reasoning=data.get("reasoning") or None,
         )
 
     def next_turn_stream(
@@ -141,7 +154,7 @@ class OpenAIProvider(LLMProvider):
         history: list[HistoryMessage],
         on_delta: OnDelta,
     ) -> InterviewTurnResult:
-        system_prompt = self._interviewer_prompt.format(topic=topic)
+        system_prompt = self._interviewer_prompt.format(topic=topic) + _checklist_state_block(checklist)
         input_ = _history_to_input(history) or [
             {"role": "user", "content": "(interview is starting, ask your first question)"}
         ]
@@ -182,6 +195,7 @@ class OpenAIProvider(LLMProvider):
             checklist=[ChecklistItem(**item) for item in data.get("checklist", [])],
             next_question=final_question,
             done=bool(data.get("done", False)),
+            reasoning=data.get("reasoning") or None,
         )
 
     def analyze(self, topic: str, history: list[HistoryMessage]) -> AnalysisResult:

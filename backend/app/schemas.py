@@ -11,6 +11,7 @@ class InterviewTurnResult(BaseModel):
     checklist: list[ChecklistItem]
     next_question: str | None
     done: bool
+    reasoning: str | None = None  # debug-only: model's one-line rationale for this turn
 
 
 class Theme(BaseModel):

@@ -10,6 +10,7 @@ PROMPTS_DIR = Path(__file__).parent / "prompts"
 EXPORTS_DIR = BASE_DIR / "exports"
 
 LLM_PROVIDER = os.getenv("LLM_PROVIDER", "mock")
+DEBUG_MODE = os.getenv("DEBUG_MODE", "false").lower() in ("1", "true", "yes")
 
 # Claude dropped for now, no API key to test against - see docs/decisions.md.
 

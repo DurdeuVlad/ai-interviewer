@@ -32,8 +32,12 @@ _INTERVIEW_FUNCTION = types.FunctionDeclaration(
                 type="BOOLEAN",
                 description="True if the checklist is fully covered and the interview should end.",
             ),
+            "reasoning": types.Schema(
+                type="STRING",
+                description="One short sentence, for internal debugging only, never shown to the person: what you picked up on in their last answer and why you're asking this next question.",
+            ),
         },
-        required=["checklist", "next_question", "done"],
+        required=["checklist", "next_question", "done", "reasoning"],
     ),
 )
 
@@ -79,6 +83,15 @@ def _history_to_contents(history: list[HistoryMessage]) -> list[dict]:
     ]
 
 
+def _checklist_state_block(checklist: list[ChecklistItem]) -> str:
+    # The model has no memory between calls - without resending its own prior
+    # checklist as authoritative state, it reinvents item ids/wording each turn.
+    if not checklist:
+        return ""
+    lines = "\n".join(f"- {c.id}: {c.text} [{'covered' if c.covered else 'open'}]" for c in checklist)
+    return f"\n\nCurrent checklist state (authoritative - reuse these exact ids, don't invent new ones):\n{lines}"
+
+
 def _extract_function_call(response, fn_name: str) -> dict:
     candidate = response.candidates[0]
     for part in candidate.content.parts:
@@ -104,7 +117,7 @@ class GeminiProvider(LLMProvider):
         checklist: list[ChecklistItem],
         history: list[HistoryMessage],
     ) -> InterviewTurnResult:
-        system_prompt = self._interviewer_prompt.format(topic=topic)
+        system_prompt = self._interviewer_prompt.format(topic=topic) + _checklist_state_block(checklist)
         contents = _history_to_contents(history) or [
             {"role": "user", "parts": [{"text": "(interview is starting, ask your first question)"}]}
         ]
@@ -123,6 +136,7 @@ class GeminiProvider(LLMProvider):
             checklist=[ChecklistItem(**item) for item in data.get("checklist", [])],
             next_question=data.get("next_question") or None,
             done=bool(data.get("done", False)),
+            reasoning=data.get("reasoning") or None,
         )
 
     def analyze(self, topic: str, history: list[HistoryMessage]) -> AnalysisResult:

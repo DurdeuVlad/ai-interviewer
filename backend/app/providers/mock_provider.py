@@ -31,11 +31,16 @@ class MockProvider(LLMProvider):
             checklist[i].covered = True
 
         if all(item.covered for item in checklist):
-            return InterviewTurnResult(checklist=checklist, next_question=None, done=True)
+            return InterviewTurnResult(
+                checklist=checklist, next_question=None, done=True, reasoning="Checklist fully covered."
+            )
 
         next_item = checklist[covered_so_far]
         question = f"[mock] Regarding {topic}, {next_item.text} - what's your take?"
-        return InterviewTurnResult(checklist=checklist, next_question=question, done=False)
+        reasoning = f"Moving to checklist item '{next_item.id}' ({next_item.text})."
+        return InterviewTurnResult(
+            checklist=checklist, next_question=question, done=False, reasoning=reasoning
+        )
 
     def analyze(self, topic: str, history: list[HistoryMessage]) -> AnalysisResult:
         answers = [m.content for m in history if m.role == "user"]

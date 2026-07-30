@@ -28,13 +28,14 @@ def _build_history(turns: list[Turn]) -> list[HistoryMessage]:
 
 def start_interview(
     session: Session, provider: LLMProvider, topic: str, on_delta: OnDelta | None = None
-) -> tuple[Interview, str]:
+) -> tuple[Interview, str, str | None]:
     on_delta = on_delta or _noop
     result = call_with_retry(
         lambda: provider.next_turn_stream(topic=topic, checklist=[], history=[], on_delta=on_delta)
     )
 
     next_question = result.next_question
+    reasoning = result.reasoning
     if not next_question:
         # Backend invariant: turn 0 always asks something, regardless of what the provider claims.
         logger.warning("Provider returned no question on interview start - using fallback.")
@@ -44,6 +45,7 @@ def start_interview(
             if open_items
             else f"To start, what's your general take on {topic}?"
         )
+        reasoning = "Backend fallback: provider returned no question on turn 0."
         on_delta(next_question)
 
     interview = Interview(
@@ -58,7 +60,7 @@ def start_interview(
     session.add(turn)
     session.commit()
 
-    return interview, next_question
+    return interview, next_question, reasoning
 
 
 def submit_answer(
@@ -67,7 +69,7 @@ def submit_answer(
     interview_id: int,
     answer: str,
     on_delta: OnDelta | None = None,
-) -> tuple[str | None, bool]:
+) -> tuple[str | None, bool, str | None]:
     on_delta = on_delta or _noop
     interview = session.get(Interview, interview_id)
     if interview is None:
@@ -89,7 +91,7 @@ def submit_answer(
         interview.status = "completed"
         interview.completed_at = datetime.now(timezone.utc)
         session.commit()
-        return None, True
+        return None, True, "Backend cap: MAX_TURNS reached, ending without another provider call."
 
     history = _build_history(turns)
     checklist = [ChecklistItem(**item) for item in interview.checklist]
@@ -102,6 +104,7 @@ def submit_answer(
 
     done = result.done
     next_question = result.next_question
+    reasoning = result.reasoning
 
     if completed_turns < config.MIN_TURNS and done:
         # Backend invariant: the model never needs to know about this floor.
@@ -119,6 +122,7 @@ def submit_answer(
                 else f"Is there anything else about {interview.topic} you'd like to share?"
             )
             on_delta(next_question)
+        reasoning = f"Backend floor override (model signaled done at turn {completed_turns} < MIN_TURNS={config.MIN_TURNS}). {reasoning or ''}".strip()
 
     interview.checklist = [item.model_dump() for item in result.checklist]
 
@@ -130,7 +134,7 @@ def submit_answer(
         session.add(new_turn)
 
     session.commit()
-    return next_question, done
+    return next_question, done, reasoning
 
 
 def get_history(session: Session, interview_id: int) -> list[HistoryMessage]:
