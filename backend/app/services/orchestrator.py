@@ -12,7 +12,9 @@ from app.services.retry import call_with_retry
 
 logger = logging.getLogger(__name__)
 
-_NOOP: OnDelta = lambda _text: None  # noqa: E731
+
+def _noop(_text: str) -> None:
+    pass
 
 
 def _build_history(turns: list[Turn]) -> list[HistoryMessage]:
@@ -27,16 +29,14 @@ def _build_history(turns: list[Turn]) -> list[HistoryMessage]:
 def start_interview(
     session: Session, provider: LLMProvider, topic: str, on_delta: OnDelta | None = None
 ) -> tuple[Interview, str]:
-    on_delta = on_delta or _NOOP
+    on_delta = on_delta or _noop
     result = call_with_retry(
         lambda: provider.next_turn_stream(topic=topic, checklist=[], history=[], on_delta=on_delta)
     )
 
     next_question = result.next_question
     if not next_question:
-        # Backend invariant: turn 0 always asks something, regardless of what a
-        # (possibly misbehaving) provider claims - the model never needs to know
-        # this floor exists.
+        # Backend invariant: turn 0 always asks something, regardless of what the provider claims.
         logger.warning("Provider returned no question on interview start - using fallback.")
         open_items = [c for c in result.checklist if not c.covered]
         next_question = (
@@ -68,7 +68,7 @@ def submit_answer(
     answer: str,
     on_delta: OnDelta | None = None,
 ) -> tuple[str | None, bool]:
-    on_delta = on_delta or _NOOP
+    on_delta = on_delta or _noop
     interview = session.get(Interview, interview_id)
     if interview is None:
         raise ValueError(f"No interview with id {interview_id}")
@@ -85,8 +85,7 @@ def submit_answer(
     completed_turns = len(turns)  # all turns now have an answer, including current_turn
 
     if completed_turns >= config.MAX_TURNS:
-        # Cap already reached: end now without spending another provider call on
-        # a question we'd just discard.
+        # Cap already reached - skip the provider call, the question would just be discarded.
         interview.status = "completed"
         interview.completed_at = datetime.now(timezone.utc)
         session.commit()

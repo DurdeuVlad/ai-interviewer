@@ -7,7 +7,7 @@ OnDelta = Callable[[str], None]
 
 
 class LLMProvider(ABC):
-    """Strategy interface every provider (Claude, Gemini, OpenAI, Mock) implements.
+    """Strategy interface every provider (Gemini, OpenAI, Mock) implements.
 
     Providers are deliberately dumb: given topic/checklist/history in, structured
     result out. No orchestration logic, no persistence, no turn-counting — that
@@ -37,13 +37,10 @@ class LLMProvider(ABC):
     ) -> InterviewTurnResult:
         """Same as next_turn, but calls on_delta with question text as it's generated.
 
-        Default implementation has no real incremental streaming - it just calls
-        next_turn and emits the whole question in one burst. Providers whose API
-        genuinely supports streaming structured/tool-call output (OpenAI's
-        Responses API does, reliably) should override this for real token-by-token
-        UX. Providers that don't (or where it isn't well-supported, e.g. Gemini's
-        SDK doesn't reliably expose partial function-call argument deltas) can
-        just rely on this default rather than faking it.
+        Default: no real streaming, calls next_turn and emits the whole question in
+        one burst. Override only if the provider's API genuinely streams structured
+        output token-by-token (OpenAI's Responses API does; Gemini's SDK doesn't
+        reliably expose partial function-call deltas, so it uses this default).
         """
         result = self.next_turn(topic, checklist, history)
         if result.next_question:

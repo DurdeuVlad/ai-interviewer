@@ -9,9 +9,8 @@ from app import config
 from app.models import Interview, Summary
 from app.services import orchestrator
 
-# fpdf2's core "Helvetica" font only supports Latin-1. Real model output routinely
-# contains smart quotes/dashes outside that range - transliterate the common ones
-# to ASCII, then fall back to dropping anything else rather than crashing the export.
+# fpdf2's core "Helvetica" font only supports Latin-1, but real model output routinely
+# uses smart quotes/dashes outside that range - transliterate the common ones, drop the rest.
 _PDF_TRANSLITERATIONS = {
     "‘": "'", "’": "'",  # single smart quotes
     "“": '"', "”": '"',  # double smart quotes

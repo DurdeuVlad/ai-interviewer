@@ -4,7 +4,6 @@ from collections import Counter
 from sqlalchemy.orm import Session
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
-from app import config
 from app.models import Interview, Summary
 from app.providers.base import LLMProvider
 from app.schemas import AnalysisResult, HistoryMessage

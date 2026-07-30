@@ -11,8 +11,7 @@ EXPORTS_DIR = BASE_DIR / "exports"
 
 LLM_PROVIDER = os.getenv("LLM_PROVIDER", "mock")
 
-# Claude provider dropped for now (no API key to test against) - see docs/decisions.md.
-# Add ANTHROPIC_API_KEY/CLAUDE_MODEL back here when ClaudeProvider is implemented.
+# Claude dropped for now, no API key to test against - see docs/decisions.md.
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-flash-latest")

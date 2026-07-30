@@ -72,10 +72,8 @@ _ANALYSIS_TOOL = {
     },
 }
 
-# Best-effort partial extraction of the "next_question" string value out of a
-# streaming (possibly incomplete) JSON arguments buffer, for live token display.
-# The authoritative parse always happens on the complete response afterwards -
-# this is cosmetic only, never used for the actual InterviewTurnResult.
+# Cosmetic only, for live token display - best-effort extraction from a partial JSON
+# buffer. The authoritative parse always happens on the complete response afterwards.
 _PARTIAL_QUESTION_RE = re.compile(r'"next_question"\s*:\s*"((?:[^"\\]|\\.)*)')
 
 
@@ -176,8 +174,7 @@ class OpenAIProvider(LLMProvider):
         data = _extract_tool_call(final_response, "interview_turn")
         final_question = data.get("next_question") or None
 
-        # Correct the terminal display if our best-effort partial parse missed a
-        # tail (e.g. trailing escape sequence never resolved mid-stream).
+        # Catch up the display if the partial parse missed a tail (e.g. unresolved escape).
         if final_question and len(final_question) > printed_len:
             on_delta(final_question[printed_len:])
 
