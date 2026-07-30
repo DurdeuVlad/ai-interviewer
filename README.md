@@ -53,3 +53,12 @@ cd frontend && npm install && npm run dev
 
 Then open `http://localhost:5173`. See [backend/README.md](backend/README.md) and
 [frontend/README.md](frontend/README.md) for details.
+
+**Tests:**
+
+```bash
+cd backend && uv run pytest
+```
+```bash
+cd frontend && npm run test
+```

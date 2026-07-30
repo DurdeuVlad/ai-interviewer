@@ -38,6 +38,18 @@ Endpoints: `POST /interviews`, `POST /interviews/{id}/answer`, `GET /interviews/
 includes a `debug` block (reasoning, checklist, injection risk score) in responses, same as the
 CLI's debug printing — omitted entirely otherwise.
 
+## Tests
+
+```bash
+uv sync --dev
+uv run pytest
+```
+
+17 tests, MockProvider only (no network calls, no real API key needed) — orchestrator's
+MIN_TURNS/MAX_TURNS floor/cap, injection-risk immediate/cumulative bail-out, the atomic
+answer-race guard, analysis.py's corruption-retry/fallback, and the HTTP routes end-to-end via
+FastAPI's `TestClient`.
+
 ## Layout
 
 - `app/models.py` / `app/db.py` — SQLAlchemy models + session (`interviews`, `turns`, `summaries`)

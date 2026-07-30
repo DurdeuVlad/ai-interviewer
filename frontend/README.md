@@ -24,6 +24,16 @@ npm run dev
 
 Opens on `http://localhost:5173` by default.
 
+## Tests
+
+```bash
+npm run test
+```
+
+20 tests via Vitest + Testing Library — sentiment bucketing, the api client's error
+normalization, `ErrorBanner`'s 409-reason distinction (already-ended vs. duplicate-answer),
+`ChatBubble` alignment, and the `interviewEvents` window bridge.
+
 ## Layout
 
 - `src/api/client.js` — thin fetch wrapper, one function per backend endpoint, normalizes non-2xx
