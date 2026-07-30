@@ -7,10 +7,13 @@ Source spec: [AIAssignment.pdf](AIAssignment.pdf)
 - Backend: FastAPI (Python), package manager: `uv`
 - DB: SQLite (via SQLAlchemy) — stores interviews, questions, answers, summary
 - LLM strategy pattern: pluggable providers, common interface
-  - `ClaudeProvider` (Anthropic)
-  - `GeminiProvider` (Google)
-  - `OpenAIProvider` (GPT, chat completions — "codex pass" clarified as this, not the deprecated Codex model)
-  - `MockProvider` (canned/deterministic responses — no network, for dev/demo/tests)
+  - `GeminiProvider` (Google) — implemented
+  - `OpenAIProvider` (GPT, Responses API — "codex pass" clarified as this, not the deprecated Codex model) — implemented, real token streaming
+  - `MockProvider` (canned/deterministic responses — no network, for dev/demo/tests) — implemented
+  - `ClaudeProvider` (Anthropic) — **dropped for now**, no API key available to test against. The
+    strategy pattern makes this a drop-in addition later (implement `LLMProvider`, register in
+    `providers/factory.py`) — not a design change, just deferred work. `docs/external/anthropic.md`
+    stays as the reference for whenever it's picked back up.
 
 ## Repo layout
 Monorepo: `backend/` (FastAPI + uv) and `frontend/` (Vue + Vite) in one repo.
@@ -76,3 +79,6 @@ Prompts are not hand-tuned by trial and error. A standalone eval harness (`promp
 - (resolved) Provider failure mid-interview: retry once, then fail loudly — no silent fallback
   to MockProvider, that would mask real bugs during grading/demo
 - (resolved) Git history starts now, before backend scaffolding, for a clean commit trail
+- (resolved) Claude provider dropped for now (no API key to test with) — `mock`, `gemini`,
+  `openai` are the supported `LLM_PROVIDER` values; add Claude back later as a drop-in via the
+  existing strategy pattern, no rework needed

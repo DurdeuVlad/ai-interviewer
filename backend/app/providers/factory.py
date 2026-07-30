@@ -14,9 +14,8 @@ def get_provider(name: str | None = None) -> LLMProvider:
         return GeminiProvider()
     if name == "openai":
         return OpenAIProvider()
-    if name == "claude":
-        raise NotImplementedError(
-            "'claude' provider is not implemented yet — 'mock', 'gemini', and 'openai' are "
-            "available so far. Set LLM_PROVIDER accordingly in .env."
-        )
-    raise ValueError(f"Unknown LLM_PROVIDER: {name!r}")
+    raise ValueError(
+        f"Unknown LLM_PROVIDER: {name!r}. Available: mock, gemini, openai. "
+        "(claude is dropped for now, no API key to test against - the strategy "
+        "pattern makes it a drop-in addition later, see providers/base.py.)"
+    )

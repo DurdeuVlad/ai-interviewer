@@ -20,10 +20,11 @@ ai-interviewer/
         interviews.py          # /interviews endpoints (phase 2)
       providers/
         base.py                # Provider abstract interface (strategy pattern)
-        claude_provider.py
         gemini_provider.py
         openai_provider.py
         mock_provider.py
+        # claude_provider.py — dropped for now, no API key to test against;
+        # drop-in addition later via the same interface, see decisions.md
       services/
         orchestrator.py         # interview loop / checklist state machine (fat service layer)
         analysis.py              # summary + bonus keyword/sentiment analysis
@@ -171,12 +172,14 @@ failure.
 ## Model IDs (env-configurable, not hardcoded in provider code)
 
 ```
-CLAUDE_MODEL=claude-sonnet-5
-GEMINI_MODEL=gemini-2.5-flash
+GEMINI_MODEL=gemini-flash-latest
 OPENAI_MODEL=gpt-5.6
 ```
 
 Each provider reads its model id from env with the above as default, per `docs/external/*.md`.
+(`gemini-2.5-flash` was the original default but returned 404 for new API keys — switched to
+the `-latest` alias to avoid repeating that failure mode. `CLAUDE_MODEL` dropped along with
+`ClaudeProvider` — see decisions.md.)
 
 ## Empty/low-effort CLI answers
 
@@ -205,8 +208,7 @@ component swapping — small enough to hand-roll, but Router keeps URLs shareabl
 ## Config (backend `.env`)
 
 ```
-LLM_PROVIDER=mock          # claude | gemini | openai | mock
-ANTHROPIC_API_KEY=
+LLM_PROVIDER=mock          # gemini | openai | mock  (claude dropped for now)
 GEMINI_API_KEY=
 OPENAI_API_KEY=
 DATABASE_PATH=./interviews.db
@@ -221,9 +223,10 @@ CORS_ORIGIN=http://localhost:5173
 2. Orchestrator service (checklist state machine) driven end-to-end by `cli.py` against
    `MockProvider` — prove the loop logic without spending on real API calls
 3. JSON + PDF export module, wired to run at the end of every CLI interview
-4. Swap in the real provider (Claude first, since it's the assignment's namesake), test the full
-   terminal flow for real, then add Gemini/OpenAI using the interfaces already validated
-   conceptually in `prompt_lab/`
+4. Swap in real providers (Gemini, then OpenAI — Claude dropped for now, no API key to test
+   against), test the full terminal flow for real. OpenAI also gets genuine token streaming,
+   since its API supports it reliably; Gemini/Mock use the same interface with a single-burst
+   fallback
 5. Bonus analysis (lexicon sentiment + keyword extraction) layered onto the summary step, per
    the "polish over breadth" priority
 6. **Test thoroughly** — this is the deliverable if time runs out, so it needs to be genuinely
