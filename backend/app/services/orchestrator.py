@@ -38,13 +38,11 @@ def start_interview(
     reasoning = result.reasoning
     if not next_question:
         # Backend invariant: turn 0 always asks something, regardless of what the provider claims.
+        # Deliberately generic wording, not built from checklist item text: that text is internal
+        # state the model writes in whatever grammatical person it likes, not a sentence fragment
+        # meant to be embedded directly - doing so risks producing something ungrammatical.
         logger.warning("Provider returned no question on interview start - using fallback.")
-        open_items = [c for c in result.checklist if not c.covered]
-        next_question = (
-            f"To start, can you tell me about {open_items[0].text}?"
-            if open_items
-            else f"To start, what's your general take on {topic}?"
-        )
+        next_question = f"To start, what's your own experience with {topic}?"
         reasoning = "Backend fallback: provider returned no question on turn 0."
         on_delta(next_question)
 
@@ -115,12 +113,9 @@ def submit_answer(
         )
         done = False
         if not next_question:
-            open_items = [c for c in result.checklist if not c.covered]
-            next_question = (
-                f"Can you tell me more about {open_items[0].text}?"
-                if open_items
-                else f"Is there anything else about {interview.topic} you'd like to share?"
-            )
+            # Same reasoning as the turn-0 fallback above: don't embed raw checklist item
+            # text into a sentence, its grammatical person isn't guaranteed to fit.
+            next_question = f"Is there anything else about {interview.topic} you'd like to share?"
             on_delta(next_question)
         reasoning = f"Backend floor override (model signaled done at turn {completed_turns} < MIN_TURNS={config.MIN_TURNS}). {reasoning or ''}".strip()
 

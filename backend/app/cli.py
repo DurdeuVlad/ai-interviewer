@@ -85,20 +85,26 @@ def _sentiment_color(sentiment: str) -> str:
     }.get(sentiment, Fore.WHITE)
 
 
-def _print_summary(topic: str, summary) -> None:
+def _print_summary(summary) -> None:
     rule = "=" * 60
     print(f"\n{rule}")
     print(Style.BRIGHT + "  SUMMARY" + Style.RESET_ALL)
     print(rule)
 
     print(Style.BRIGHT + "\nThemes:" + Style.RESET_ALL)
-    for theme in summary.themes:
-        color = _sentiment_color(theme["sentiment"])
-        print(f"- {theme['name']} ({color}{theme['sentiment']}{Style.RESET_ALL}): \"{theme['quote']}\"")
+    if summary.themes:
+        for theme in summary.themes:
+            color = _sentiment_color(theme["sentiment"])
+            print(f"- {theme['name']} ({color}{theme['sentiment']}{Style.RESET_ALL}): \"{theme['quote']}\"")
+    else:
+        print("No clear themes emerged from this conversation.")
 
     print(Style.BRIGHT + "\nKey points:" + Style.RESET_ALL)
-    for point in summary.key_points:
-        print(f"- {point}")
+    if summary.key_points:
+        for point in summary.key_points:
+            print(f"- {point}")
+    else:
+        print("No concrete points could be drawn from the responses given.")
 
     feedback = summary.feedback or {}
     if feedback.get("positives") or feedback.get("constructive"):
@@ -116,7 +122,7 @@ def _print_summary(topic: str, summary) -> None:
         print(f"Overall sentiment: {summary.sentiment_score:+.3f} ({label})")
 
     print(f"\n{rule}")
-    print(f"Thanks for sharing your thoughts on {topic}!")
+    print("Thanks for taking part in this interview!")
 
 
 def _handle_early_exit(session, interview) -> None:
@@ -165,7 +171,7 @@ def main() -> None:
 
         print(Fore.YELLOW + "\nInterview complete. Generating summary..." + Style.RESET_ALL)
         summary = analysis.run_analysis(session, provider, interview.id)
-        _print_summary(topic, summary)
+        _print_summary(summary)
 
         json_path = export.export_json(session, interview.id)
         pdf_path = export.export_pdf(session, interview.id)

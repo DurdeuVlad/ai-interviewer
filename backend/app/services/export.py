@@ -87,13 +87,19 @@ def export_pdf(session: Session, interview_id: int) -> Path:
         pdf.ln(4)
         _line(pdf, "Summary", size=12, bold=True, height=8)
 
-        for theme in payload["summary"]["themes"]:
-            _line(pdf, f"- {theme['name']} ({theme['sentiment']}): \"{theme['quote']}\"")
+        if payload["summary"]["themes"]:
+            for theme in payload["summary"]["themes"]:
+                _line(pdf, f"- {theme['name']} ({theme['sentiment']}): \"{theme['quote']}\"")
+        else:
+            _line(pdf, "No clear themes emerged from this conversation.")
 
         pdf.ln(2)
         _line(pdf, "Key points", bold=True)
-        for point in payload["summary"]["key_points"]:
-            _line(pdf, f"- {point}")
+        if payload["summary"]["key_points"]:
+            for point in payload["summary"]["key_points"]:
+                _line(pdf, f"- {point}")
+        else:
+            _line(pdf, "No concrete points could be drawn from the responses given.")
 
         feedback = payload["summary"].get("feedback") or {}
         if feedback.get("positives") or feedback.get("constructive"):
