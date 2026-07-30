@@ -89,7 +89,13 @@ def _checklist_state_block(checklist: list[ChecklistItem]) -> str:
     if not checklist:
         return ""
     lines = "\n".join(f"- {c.id}: {c.text} [{'covered' if c.covered else 'open'}]" for c in checklist)
-    return f"\n\nCurrent checklist state (authoritative - reuse these exact ids, don't invent new ones):\n{lines}"
+    return (
+        "\n\nCurrent checklist state (this is your own prior state, build on it):\n"
+        f"{lines}\n"
+        "Keep ids stable for items that still apply. You may add, remove, or reword items if "
+        "the conversation genuinely calls for it - but don't discard and reinvent the whole "
+        "list from scratch without reason."
+    )
 
 
 def _extract_function_call(response, fn_name: str) -> dict:
