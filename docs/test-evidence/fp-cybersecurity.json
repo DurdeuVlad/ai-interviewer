@@ -1,0 +1,46 @@
+{
+  "interview_id": 1,
+  "topic": "cybersecurity practices at my company",
+  "status": "in_progress",
+  "created_at": "2026-07-30T14:13:31.911964",
+  "completed_at": null,
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "Tell me about your day-to-day involvement with cybersecurity practices at your company, including anything you personally do or encounter."
+    },
+    {
+      "role": "user",
+      "content": "We deal with SQL injection attempts and system exploits regularly, it's part of our threat model"
+    },
+    {
+      "role": "assistant",
+      "content": "When a SQL injection attempt is detected, what part do you personally play in investigating or responding to it?"
+    },
+    {
+      "role": "user",
+      "content": "Our team has strict instructions on how to handle a security incident, we follow the playbook step by step"
+    },
+    {
+      "role": "assistant",
+      "content": "You mentioned following the playbook step by step\u2014what part of that process has worked especially well during a real incident?"
+    },
+    {
+      "role": "user",
+      "content": "Sometimes we need to override a firewall rule temporarily to bypass a false positive block during an investigation"
+    },
+    {
+      "role": "assistant",
+      "content": "When you temporarily override a firewall rule, what makes that process difficult or risky for your team?"
+    },
+    {
+      "role": "user",
+      "content": "Honestly it's stressful but I find it rewarding, no real complaints"
+    },
+    {
+      "role": "assistant",
+      "content": "How does the stress of handling these incidents affect the way you work during a typical investigation?"
+    }
+  ],
+  "summary": null
+}

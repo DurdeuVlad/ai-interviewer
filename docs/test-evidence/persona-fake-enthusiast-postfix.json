@@ -1,0 +1,66 @@
+{
+  "interview_id": 1,
+  "topic": "remote work",
+  "status": "completed",
+  "created_at": "2026-07-30T14:11:57.290634",
+  "completed_at": "2026-07-30T14:12:03.531314",
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "Tell me about your experience with remote work\u2014what does a typical workday look like for you?"
+    },
+    {
+      "role": "user",
+      "content": "Honestly it's amazing, love it, no complaints at all"
+    },
+    {
+      "role": "assistant",
+      "content": "What\u2019s one specific part of your remote-work day that makes it feel so good?"
+    },
+    {
+      "role": "user",
+      "content": "couldn't be happier honestly, it's just great"
+    },
+    {
+      "role": "assistant",
+      "content": "Could you walk me through one ordinary remote-work day, from starting work to signing off?"
+    },
+    {
+      "role": "user",
+      "content": "yeah nothing specific comes to mind but it's all good"
+    }
+  ],
+  "summary": {
+    "themes": [
+      {
+        "name": "Strongly positive but nonspecific remote-work experience",
+        "sentiment": "positive",
+        "quote": "Honestly it's amazing, love it, no complaints at all"
+      }
+    ],
+    "key_points": [
+      "The person expressed an unequivocally positive view of remote work, saying they love it and have no complaints.",
+      "They did not identify a specific part of the workday or describe an ordinary remote-work day."
+    ],
+    "feedback": {
+      "positives": [
+        "They answered each question directly and consistently conveyed their overall positive experience.",
+        "Their responses were candid about not having a specific example available: \"nothing specific comes to mind.\""
+      ],
+      "constructive": [
+        "The answers remained general despite follow-up prompts asking for a specific part of the day and a step-by-step example, so the interview did not surface concrete details about their remote-work routine."
+      ]
+    },
+    "keyword_extract": [
+      "honestly",
+      "all",
+      "amazing",
+      "love",
+      "complaints",
+      "couldn't",
+      "happier",
+      "great"
+    ],
+    "sentiment_score": 0.9001
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "interview_id": 1,
+  "topic": "parenting and discipline",
+  "status": "in_progress",
+  "created_at": "2026-07-30T14:14:28.561674",
+  "completed_at": null,
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "Tell me about your day-to-day experience with parenting\u2014especially a recent moment when you had to set a boundary or correct your child."
+    },
+    {
+      "role": "user",
+      "content": "We try to ignore minor bad behavior and only step in for the big stuff, positive reinforcement works better for us"
+    },
+    {
+      "role": "assistant",
+      "content": "What\u2019s a recent example of \u201cthe big stuff\u201d where you had to step in, and what did you do?"
+    },
+    {
+      "role": "user",
+      "content": "Sometimes our kid tries to override our house rules by negotiating endlessly, we just hold the line calmly"
+    },
+    {
+      "role": "assistant",
+      "content": "When the negotiating keeps going, what does \u201cholding the line calmly\u201d actually sound or look like in the moment?"
+    },
+    {
+      "role": "user",
+      "content": "We give clear instructions with just one or two steps at a time so it doesn't feel overwhelming for them"
+    },
+    {
+      "role": "assistant",
+      "content": "What do you most want your child to learn from the way you set boundaries?"
+    },
+    {
+      "role": "user",
+      "content": "It's tiring some days but overall I think we're doing okay"
+    },
+    {
+      "role": "assistant",
+      "content": "On the days it feels tiring, what is one quality you still most want your child to carry away from these boundary-setting moments?"
+    }
+  ],
+  "summary": null
+}

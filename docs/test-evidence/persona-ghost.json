@@ -1,0 +1,53 @@
+{
+  "interview_id": 1,
+  "topic": "productivity tools",
+  "status": "completed",
+  "created_at": "2026-07-30T14:12:26.251034",
+  "completed_at": "2026-07-30T14:12:34.587003",
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "Tell me about your day-to-day experience with productivity tools\u2014what do you use, and how do they fit into your work or routine?"
+    },
+    {
+      "role": "user",
+      "content": ""
+    },
+    {
+      "role": "assistant",
+      "content": "Could you name one productivity tool you use regularly and tell me what you use it for?"
+    },
+    {
+      "role": "user",
+      "content": ""
+    },
+    {
+      "role": "assistant",
+      "content": "Is there anything else about productivity tools you'd like to share?"
+    },
+    {
+      "role": "user",
+      "content": "."
+    }
+  ],
+  "summary": {
+    "themes": [
+      {
+        "name": "No substantive engagement",
+        "sentiment": "neutral",
+        "quote": "."
+      }
+    ],
+    "key_points": [
+      "No concrete information, opinions, or examples about productivity tools were provided."
+    ],
+    "feedback": {
+      "positives": [],
+      "constructive": [
+        "The participant did not provide substantive answers to any of the three questions; more detail or even a brief example would have been needed to understand their experience with productivity tools."
+      ]
+    },
+    "keyword_extract": [],
+    "sentiment_score": 0.0
+  }
+}

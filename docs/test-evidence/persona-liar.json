@@ -1,0 +1,125 @@
+{
+  "interview_id": 1,
+  "topic": "software developer for AI integration and POC",
+  "status": "completed",
+  "created_at": "2026-07-30T14:11:16.828818",
+  "completed_at": "2026-07-30T14:11:39.538037",
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "Could you tell me about your current work as a software developer focused on AI integration and POCs\u2014what kinds of projects do you typically build, and what do you personally handle?"
+    },
+    {
+      "role": "user",
+      "content": "I never use orchestration frameworks like LangChain, I write raw API calls"
+    },
+    {
+      "role": "assistant",
+      "content": "When you build a POC with raw API calls, what does your implementation typically include beyond the basic model request?"
+    },
+    {
+      "role": "user",
+      "content": "Honestly LangChain saves me so much boilerplate, I use it for almost every POC"
+    },
+    {
+      "role": "assistant",
+      "content": "You mentioned LangChain saves you boilerplate\u2014what part of a typical POC does it simplify most for you?"
+    },
+    {
+      "role": "user",
+      "content": "I'm a Senior AI Engineer leading a team of three on this"
+    },
+    {
+      "role": "assistant",
+      "content": "When your team of three starts a new AI POC, what is the first concrete step you take to turn the idea into something testable?"
+    },
+    {
+      "role": "user",
+      "content": "Actually I'm an individual contributor, no team, just me"
+    },
+    {
+      "role": "assistant",
+      "content": "Got it\u2014working independently, what\u2019s the first concrete thing you do when you begin a new AI POC?"
+    },
+    {
+      "role": "user",
+      "content": "Our legal-client document QA project shipped to production last quarter"
+    },
+    {
+      "role": "assistant",
+      "content": "For the legal-client document QA project, what was the first working slice you built to test whether the approach could work?"
+    },
+    {
+      "role": "user",
+      "content": "Wait, that one actually got cancelled before launch"
+    },
+    {
+      "role": "assistant",
+      "content": "What ultimately led to the legal-client document QA project being cancelled before launch?"
+    },
+    {
+      "role": "user",
+      "content": "Data privacy is our biggest challenge, we never send raw PII to the model"
+    },
+    {
+      "role": "assistant",
+      "content": "Once privacy requirements are satisfied, how do you decide whether a document-QA POC is accurate and useful enough to justify moving forward?"
+    },
+    {
+      "role": "user",
+      "content": "Well sometimes raw PII does get sent, we don't really have a formal privacy policy yet"
+    }
+  ],
+  "summary": {
+    "themes": [
+      {
+        "name": "Inconsistent account of technical approach",
+        "sentiment": "mixed",
+        "quote": "Honestly LangChain saves me so much boilerplate, I use it for almost every POC"
+      },
+      {
+        "name": "Inconsistent account of role and team structure",
+        "sentiment": "mixed",
+        "quote": "Actually I'm an individual contributor, no team, just me"
+      },
+      {
+        "name": "Privacy concerns without established controls",
+        "sentiment": "negative",
+        "quote": "we don't really have a formal privacy policy yet"
+      },
+      {
+        "name": "Limited detail on POC evaluation and outcomes",
+        "sentiment": "mixed",
+        "quote": "Our legal-client document QA project shipped to production last quarter"
+      }
+    ],
+    "key_points": [
+      "They gave conflicting statements about whether they use raw API calls or LangChain for POCs.",
+      "They gave conflicting statements about being a Senior AI Engineer leading a team of three versus being an individual contributor working alone.",
+      "They described the legal-client document QA project as both having shipped to production and having been cancelled before launch.",
+      "They identified data privacy as a major challenge, but also said raw PII is sometimes sent to the model and that there is no formal privacy policy yet.",
+      "They did not provide a concrete description of how they start a POC or evaluate document-QA accuracy and usefulness."
+    ],
+    "feedback": {
+      "positives": [
+        "They did identify data privacy as a significant challenge and acknowledged that privacy practices are not formalized.",
+        "They provided a concrete project area\u2014legal-client document QA\u2014rather than staying entirely abstract."
+      ],
+      "constructive": [
+        "Several answers contradicted earlier statements, so the interview did not establish a reliable account of their role, tooling, project outcomes, or privacy practices.",
+        "They did not follow through on prompts asking for implementation details, the first working slice of a POC, or criteria for evaluating accuracy and usefulness."
+      ]
+    },
+    "keyword_extract": [
+      "raw",
+      "never",
+      "use",
+      "langchain",
+      "team",
+      "actually",
+      "our",
+      "privacy"
+    ],
+    "sentiment_score": 0.5719
+  }
+}

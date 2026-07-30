@@ -1,0 +1,76 @@
+{
+  "interview_id": 1,
+  "topic": "AI in the workplace",
+  "status": "completed",
+  "created_at": "2026-07-30T14:14:57.340533",
+  "completed_at": "2026-07-30T14:15:08.010261",
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "Could you tell me about how AI shows up in your day-to-day work, and one specific way you\u2019ve used it?"
+    },
+    {
+      "role": "user",
+      "content": "Ugh, fine, I use it sometimes I guess"
+    },
+    {
+      "role": "assistant",
+      "content": "What\u2019s one recent work task you used AI for?"
+    },
+    {
+      "role": "user",
+      "content": "Why do you even care, this is a pointless interview honestly"
+    },
+    {
+      "role": "assistant",
+      "content": "Fair enough\u2014what, specifically, has made AI at work feel pointless to you?"
+    },
+    {
+      "role": "user",
+      "content": "I don't want to answer that one, next question already"
+    },
+    {
+      "role": "assistant",
+      "content": "Has using AI changed how quickly you get any part of your work done?"
+    },
+    {
+      "role": "user",
+      "content": "Whatever, it's fine I guess, can we just wrap this up"
+    }
+  ],
+  "summary": {
+    "themes": [
+      {
+        "name": "No substantive engagement with AI in the workplace",
+        "sentiment": "neutral",
+        "quote": "I don't want to answer that one, next question already"
+      }
+    ],
+    "key_points": [
+      "The participant said they use AI at work \u201csometimes,\u201d but did not provide a specific use case.",
+      "They described the interview\u2014and, when asked, AI at work\u2014as feeling \u201cpointless,\u201d but declined to explain why.",
+      "They did not answer whether AI had changed the speed of their work, responding only, \u201cWhatever, it's fine I guess.\u201d"
+    ],
+    "feedback": {
+      "positives": [
+        "They gave a direct, candid indication that they use AI sometimes and that they did not want to discuss the topic further.",
+        "They clearly signaled when they preferred to move on rather than offering invented details."
+      ],
+      "constructive": [
+        "The responses remained too brief to establish concrete examples, such as a specific task or any measurable change in work speed.",
+        "They raised the view that AI felt pointless but declined the follow-up question, so that perspective could not be explored further."
+      ]
+    },
+    "keyword_extract": [
+      "fine",
+      "guess",
+      "ugh",
+      "use",
+      "sometimes",
+      "why",
+      "even",
+      "care"
+    ],
+    "sentiment_score": 0.6983
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "interview_id": 1,
+  "topic": "software development best practices",
+  "status": "in_progress",
+  "created_at": "2026-07-30T14:13:56.135869",
+  "completed_at": null,
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "Tell me about your day-to-day involvement in software development, and a practice you rely on regularly."
+    },
+    {
+      "role": "user",
+      "content": "I always override the equals and hashCode methods when I create a new data class"
+    },
+    {
+      "role": "assistant",
+      "content": "What problem have you actually avoided or encountered by overriding `equals` and `hashCode` in a data class?"
+    },
+    {
+      "role": "user",
+      "content": "We keep a strict gitignore so build artifacts never get committed by accident"
+    },
+    {
+      "role": "assistant",
+      "content": "Has your strict `.gitignore` ever prevented a real problem, or has a missing pattern caused build artifacts to slip through?"
+    },
+    {
+      "role": "user",
+      "content": "Our CPU-bound service processes millions of instructions per second at peak load"
+    },
+    {
+      "role": "assistant",
+      "content": "With that CPU-bound service, what specific development practice helped you keep its peak performance reliable?"
+    },
+    {
+      "role": "user",
+      "content": "Honestly it's a solid setup, I don't have major complaints about our tooling"
+    },
+    {
+      "role": "assistant",
+      "content": "Can you recall one specific change\u2014perhaps to the code, tests, or workflow\u2014that made this solid setup noticeably faster or safer?"
+    }
+  ],
+  "summary": null
+}
