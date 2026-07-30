@@ -11,6 +11,8 @@ from app.api_schemas import (
     DebugInfo,
     ExportLinks,
     InterviewDetailResponse,
+    InterviewListResponse,
+    InterviewSummaryItem,
     StartInterviewResponse,
     SummaryResponse,
     TopicRequest,
@@ -46,6 +48,22 @@ def _debug_info(interview: Interview, reasoning: str | None) -> DebugInfo | None
     if not config.DEBUG_MODE:
         return None
     return DebugInfo(reasoning=reasoning, checklist=interview.checklist, risk_score=interview.risk_score)
+
+
+@router.get("", response_model=InterviewListResponse)
+def list_interviews(session: Session = Depends(get_db)) -> InterviewListResponse:
+    interviews = orchestrator.list_interviews(session)
+    return InterviewListResponse(
+        interviews=[
+            InterviewSummaryItem(
+                interview_id=i.id,
+                topic=i.topic,
+                status=i.status,
+                created_at=i.created_at.isoformat(),
+            )
+            for i in interviews
+        ]
+    )
 
 
 @router.post("", status_code=201, response_model=StartInterviewResponse)

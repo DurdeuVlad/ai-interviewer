@@ -20,8 +20,11 @@ export default function TopicEntryView() {
     setLoading(true);
     setError(null);
     try {
-      const res = await startInterview(topic.trim());
-      navigate(`/interview/${res.interview_id}`, { state: { question: res.question } });
+      const submittedTopic = topic.trim();
+      const res = await startInterview(submittedTopic);
+      navigate(`/interview/${res.interview_id}`, {
+        state: { question: res.question, topic: submittedTopic },
+      });
     } catch (err) {
       setError(err);
       setLoading(false);

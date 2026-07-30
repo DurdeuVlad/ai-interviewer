@@ -66,3 +66,14 @@ class SummaryResponse(BaseModel):
     keyword_extract: list[str]
     sentiment_score: float | None
     exports: ExportLinks
+
+
+class InterviewSummaryItem(BaseModel):
+    interview_id: int
+    topic: str
+    status: str
+    created_at: str
+
+
+class InterviewListResponse(BaseModel):
+    interviews: list[InterviewSummaryItem]

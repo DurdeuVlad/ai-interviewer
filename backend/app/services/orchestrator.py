@@ -166,3 +166,7 @@ def get_history(session: Session, interview_id: int) -> list[HistoryMessage]:
         )
     )
     return _build_history(turns)
+
+
+def list_interviews(session: Session) -> list[Interview]:
+    return list(session.scalars(select(Interview).order_by(Interview.created_at.desc())))

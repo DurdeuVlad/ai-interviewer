@@ -26,6 +26,10 @@ async function request(path, options = {}) {
   return response.json();
 }
 
+export function listInterviews() {
+  return request("/interviews");
+}
+
 export function startInterview(topic) {
   return request("/interviews", { method: "POST", body: JSON.stringify({ topic }) });
 }
