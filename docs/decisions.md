@@ -69,6 +69,13 @@ Ranked equally, all must be strong: code clarity/structure, prompt design/LLM in
 ## Prompt engineering method
 Prompts are not hand-tuned by trial and error. A standalone eval harness (`prompt_lab/`, own `uv` project, not part of shipped app) tests candidate system prompts against scripted scenarios and scores them on a fixed rubric, judged by an LLM grader — transparent, repeatable, same rubric every time (see `prompt_lab/README.md` once built).
 
+The shipped prompt was also tested directly against the real orchestrator + real providers with
+adversarial scenarios (prompt injection, guardrail off-topic, adversarial pushback, low-effort
+answers) — see [edge-case-testing.md](edge-case-testing.md). Found and fixed one real gap: the
+same prompt produced different off-topic-request behavior across models (Gemini declined
+correctly on its own, OpenAI didn't), fixed with an explicit guardrail rule rather than relying
+on incidental model alignment.
+
 ## Open questions log
 - (resolved) Include MockProvider — yes, for cost-free dev/demo/testing
 - (resolved) "codex pass" = OpenAI GPT provider
