@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime, timezone
 
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
 from app import config
@@ -79,8 +79,25 @@ def submit_answer(
         )
     )
     current_turn = turns[-1]
-    current_turn.answer = answer
+
+    # Atomic conditional update, not a read-then-write: defends against genuinely concurrent
+    # submit_answer calls for the same turn (a rapid double-click racing past the client-side
+    # guard, a retried request, two tabs on the same interview). A plain "if current_turn.answer
+    # is not None: raise" check-then-set is NOT sufficient here - two concurrent requests can
+    # both read answer=None before either commits (verified: it let 3 truly concurrent raw HTTP
+    # requests all succeed and each independently call the provider, producing 3 duplicate
+    # questions for one answer). WHERE answer IS NULL makes the write itself the check - only
+    # one concurrent UPDATE can ever affect a row, and SQLite's file-level write locking
+    # serializes the competing statements, so exactly one succeeds.
+    updated = session.execute(
+        update(Turn)
+        .where(Turn.id == current_turn.id, Turn.answer.is_(None))
+        .values(answer=answer)
+    )
+    if updated.rowcount == 0:
+        raise ValueError("This question has already been answered.")
     session.flush()
+    session.refresh(current_turn)
 
     completed_turns = len(turns)  # all turns now have an answer, including current_turn
 

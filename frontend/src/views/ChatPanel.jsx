@@ -36,6 +36,12 @@ export default function ChatPanel({ onMenuClick }) {
 
   const lastAnswerRef = useRef("");
   const bottomRef = useRef(null);
+  // Synchronous guard against rapid re-entrant submits (e.g. a fast double-click): the `loading`
+  // *state* isn't enough on its own, since setState is batched/async and multiple click handlers
+  // fired within the same event burst can all still see the stale pre-update value. A ref updates
+  // immediately, so this actually blocks the second call rather than just relying on the button's
+  // disabled attribute (which also lags a render behind).
+  const submittingRef = useRef(false);
 
   // Reset all per-interview state whenever the id changes (covers "/" <-> "/interview/:id" too).
   useEffect(() => {
@@ -124,7 +130,8 @@ export default function ChatPanel({ onMenuClick }) {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    if (!answer.trim() || loading) return;
+    if (!answer.trim() || submittingRef.current) return;
+    submittingRef.current = true;
     const submittedAnswer = answer.trim();
     lastAnswerRef.current = submittedAnswer;
     setLoading(true);
@@ -147,6 +154,7 @@ export default function ChatPanel({ onMenuClick }) {
       setError(err);
     } finally {
       setLoading(false);
+      submittingRef.current = false;
     }
   }
 

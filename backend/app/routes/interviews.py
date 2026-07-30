@@ -87,7 +87,12 @@ def submit_answer(
     if interview.status == "completed":
         raise HTTPException(status_code=409, detail="This interview has already ended.")
 
-    question, done, reasoning = orchestrator.submit_answer(session, _provider, interview_id, body.answer)
+    try:
+        question, done, reasoning = orchestrator.submit_answer(
+            session, _provider, interview_id, body.answer
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
     session.refresh(interview)
     return AnswerResponse(
         question=question,

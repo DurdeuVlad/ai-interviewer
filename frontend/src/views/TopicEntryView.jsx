@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
@@ -13,10 +13,15 @@ export default function TopicEntryView() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  // See ChatPanel's submittingRef for why a ref is needed here too, not just `loading` state -
+  // a rapid double-click could otherwise fire two POST /interviews before the disabled button
+  // attribute updates, creating a duplicate, orphaned interview.
+  const submittingRef = useRef(false);
 
   async function handleSubmit(event) {
     event.preventDefault();
-    if (!topic.trim() || loading) return;
+    if (!topic.trim() || submittingRef.current) return;
+    submittingRef.current = true;
     setLoading(true);
     setError(null);
     try {
@@ -28,6 +33,7 @@ export default function TopicEntryView() {
     } catch (err) {
       setError(err);
       setLoading(false);
+      submittingRef.current = false;
     }
   }
 
