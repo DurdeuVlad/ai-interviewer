@@ -14,6 +14,18 @@ const theme = createTheme({
   shape: { borderRadius: 10 },
   typography: {
     fontFamily: '"Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+    fontSize: 16,
+    h6: { fontSize: "1.5rem" },
+    subtitle1: { fontSize: "1.25rem" },
+    body1: { fontSize: "1.1rem" },
+    body2: { fontSize: "1.05rem" },
+    button: { fontSize: "1.05rem", textTransform: "none" },
+    caption: { fontSize: "0.9rem" },
+  },
+  components: {
+    MuiIconButton: {
+      defaultProps: { size: "large" },
+    },
   },
 });
 

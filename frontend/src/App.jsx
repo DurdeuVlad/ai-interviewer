@@ -7,7 +7,8 @@ import { useTheme } from "@mui/material/styles";
 import Sidebar from "./components/Sidebar.jsx";
 import ChatPanel from "./views/ChatPanel.jsx";
 
-const SIDEBAR_WIDTH = 320;
+const SIDEBAR_WIDTH = 360;
+const MOBILE_SIDEBAR_WIDTH = "85vw";
 
 export default function App() {
   const theme = useTheme();
@@ -27,7 +28,7 @@ export default function App() {
           open={mobileOpen}
           onClose={() => setMobileOpen(false)}
           ModalProps={{ keepMounted: true }}
-          sx={{ "& .MuiDrawer-paper": { width: SIDEBAR_WIDTH } }}
+          sx={{ "& .MuiDrawer-paper": { width: MOBILE_SIDEBAR_WIDTH, maxWidth: SIDEBAR_WIDTH } }}
         >
           <Sidebar />
         </Drawer>

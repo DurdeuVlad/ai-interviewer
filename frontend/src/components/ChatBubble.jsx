@@ -11,9 +11,9 @@ export default function ChatBubble({ sender, children }) {
     >
       <Box
         sx={{
-          maxWidth: "75%",
-          px: 2,
-          py: 1,
+          maxWidth: { xs: "90%", sm: "80%", md: "75%" },
+          px: 2.5,
+          py: 1.5,
           bgcolor: isUser ? "primary.main" : "grey.100",
           color: isUser ? "primary.contrastText" : "text.primary",
           borderRadius: 2,

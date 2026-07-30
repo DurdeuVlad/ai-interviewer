@@ -55,7 +55,7 @@ export default function Sidebar() {
   }, [location.pathname]);
 
   return (
-    <Box sx={{ width: 320, height: "100%", display: "flex", flexDirection: "column" }}>
+    <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
       <Stack
         direction="row"
         sx={{ p: 2, alignItems: "center", justifyContent: "space-between" }}

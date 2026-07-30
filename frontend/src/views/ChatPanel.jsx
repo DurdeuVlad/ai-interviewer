@@ -160,7 +160,7 @@ export default function ChatPanel({ onMenuClick }) {
       <Box sx={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
         <ChatHeader title="New chat" onMenuClick={onMenuClick} />
         <Box sx={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", p: 3 }}>
-          <Box sx={{ width: "100%", maxWidth: 480 }}>
+          <Box sx={{ width: "100%", maxWidth: 560 }}>
             <TopicEntryView />
           </Box>
         </Box>
@@ -242,11 +242,10 @@ export default function ChatPanel({ onMenuClick }) {
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
               fullWidth
-              size="small"
               autoFocus
               disabled={loading}
             />
-            <Button type="submit" variant="contained" disabled={!answer.trim() || loading}>
+            <Button type="submit" variant="contained" size="large" disabled={!answer.trim() || loading}>
               Send
             </Button>
           </Stack>
