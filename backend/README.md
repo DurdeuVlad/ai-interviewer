@@ -50,6 +50,17 @@ MIN_TURNS/MAX_TURNS floor/cap, injection-risk immediate/cumulative bail-out, the
 answer-race guard, analysis.py's corruption-retry/fallback, and the HTTP routes end-to-end via
 FastAPI's `TestClient`.
 
+## Docker
+
+```bash
+docker build -t ai-interviewer-backend .
+docker run -p 8000:8000 -e LLM_PROVIDER=mock ai-interviewer-backend
+```
+
+Or use `docker compose up --build` from the repo root to run this alongside the frontend — see
+[../docker-compose.yml](../docker-compose.yml) (handles the DB/exports volumes and env vars for
+you).
+
 ## Layout
 
 - `app/models.py` / `app/db.py` — SQLAlchemy models + session (`interviews`, `turns`, `summaries`)
