@@ -6,22 +6,34 @@ conversational agentic loop, then produces a themed summary. Built for the assig
 
 ## Status
 
-Phase 1 (terminal CLI backend) working end-to-end against real providers. See:
+Both phases working end-to-end against real providers:
+- **Phase 1** — terminal CLI, fully hardened (adversarial testing, prompt-injection risk
+  scoring, corruption guards)
+- **Phase 2** — FastAPI HTTP layer + React frontend, same services layer as the CLI, no logic
+  duplicated
+
+See:
 - [docs/decisions.md](docs/decisions.md) — architecture decisions and rationale
 - [docs/implementation-plan.md](docs/implementation-plan.md) — concrete build plan (DB schema, API/CLI contract, build order)
-- [docs/edge-case-testing.md](docs/edge-case-testing.md) — adversarial/robustness test results
-- [docs/external/](docs/external/) — reference docs for the stack (Gemini/OpenAI/Anthropic APIs, uv, FastAPI, SQLAlchemy, Vue)
-- [backend/README.md](backend/README.md) — how to run it
+- [docs/edge-case-testing.md](docs/edge-case-testing.md) — adversarial/robustness test results, with real transcript evidence in [docs/test-evidence/](docs/test-evidence/)
+- [docs/external/](docs/external/) — reference docs for the stack (Gemini/OpenAI/Anthropic APIs, uv, FastAPI, SQLAlchemy)
+- [backend/README.md](backend/README.md) — how to run the CLI and/or the API
+- [frontend/README.md](frontend/README.md) — how to run the web UI
 - [prompt_lab/](prompt_lab/) — standalone prompt-evaluation harness (separate from the shipped app)
 
 ## Stack
 
-- Backend: FastAPI (Python), `uv` — terminal CLI first (done), HTTP API second (not started, see build phasing in decisions.md)
-- Frontend: Vue.js + Vite (phase 2, only if time allows — not started)
+- Backend: FastAPI (Python), `uv` — terminal CLI and HTTP API, two entry points over one
+  services layer
+- Frontend: React + Vite + MUI (phase 2 — changed from an earlier Vue.js plan, see decisions.md)
 - DB: SQLite via SQLAlchemy, plus JSON/PDF export per interview
-- LLM providers: Gemini and OpenAI (implemented, real token streaming for OpenAI), Mock (implemented), Claude (dropped for now, no API key — drop-in addition later via the same strategy pattern)
+- LLM providers: Gemini and OpenAI (implemented, real token streaming for OpenAI in the CLI),
+  Mock (implemented), Claude (dropped for now, no API key — drop-in addition later via the same
+  strategy pattern)
 
 ## Running it
+
+**Terminal:**
 
 ```bash
 cd backend
@@ -30,4 +42,14 @@ uv sync
 uv run python -m app.cli
 ```
 
-See [backend/README.md](backend/README.md) for details.
+**Web UI** (two terminals):
+
+```bash
+cd backend && uv run uvicorn app.main:app --reload --port 8000
+```
+```bash
+cd frontend && npm install && npm run dev
+```
+
+Then open `http://localhost:5173`. See [backend/README.md](backend/README.md) and
+[frontend/README.md](frontend/README.md) for details.

@@ -3,7 +3,10 @@
 Source spec: [AIAssignment.pdf](AIAssignment.pdf)
 
 ## Stack
-- Frontend: Vue.js (small SPA)
+- Frontend: React + Vite + MUI (small SPA) — **changed from the original Vue.js choice** when
+  phase 2 actually started; user asked for a Material Design look (Material UI), which is
+  React-specific, and opted to pivot the whole frontend framework rather than use a Vue
+  equivalent (Vuetify). No backend impact — the API/schemas were designed framework-agnostic.
 - Backend: FastAPI (Python), package manager: `uv`
 - DB: SQLite (via SQLAlchemy) — stores interviews, questions, answers, summary
 - LLM strategy pattern: pluggable providers, common interface
@@ -16,7 +19,7 @@ Source spec: [AIAssignment.pdf](AIAssignment.pdf)
     stays as the reference for whenever it's picked back up.
 
 ## Repo layout
-Monorepo: `backend/` (FastAPI + uv) and `frontend/` (Vue + Vite) in one repo.
+Monorepo: `backend/` (FastAPI + uv) and `frontend/` (React + Vite) in one repo.
 
 ## Flow — conversational agentic loop
 Not a fixed question list generated upfront. Instead:
@@ -41,10 +44,13 @@ Open question: exact turn-loop max-turns safety cap value — decide during back
 ## Build phasing
 Terminal-first. The assignment explicitly allows a terminal UI, so that's the real MVP:
 build and thoroughly test a CLI-driven backend (`cli.py` entry point over the same
-`services`/`providers` layer) before touching FastAPI routes or the Vue frontend. Web UI is
-phase 2, only if time remains — see [implementation-plan.md](implementation-plan.md) for the
-full build order. This de-risks the submission: a polished terminal tool is a complete,
-scoreable deliverable on its own.
+`services`/`providers` layer) before touching FastAPI routes or a web frontend. This de-risked
+the submission: a polished terminal tool was a complete, scoreable deliverable on its own before
+phase 2 started. See [implementation-plan.md](implementation-plan.md) for the full build order.
+
+Phase 2 (FastAPI HTTP layer + React frontend) is now built as a second entry point over the same
+services — no business logic duplicated between the CLI and the API. See the "Frontend" stack
+entry above for the Vue→React pivot.
 
 ## Storage & export
 SQLite remains the durable store for running an interview across turns, but it's not the

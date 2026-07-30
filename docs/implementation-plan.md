@@ -3,6 +3,10 @@
 Companion to [decisions.md](decisions.md) — this is the concrete shape of the app before any
 scaffolding code is written.
 
+**Note**: this doc predates phase 2 actually being built and still describes the frontend as
+Vue — it was later changed to React + MUI (see decisions.md's Stack section for why). Frontend
+sections below are historical planning context, not the final choice.
+
 ## Repo structure
 
 ```
