@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 import CircularProgress from "@mui/material/CircularProgress";
 import { startInterview } from "../api/client.js";
 import ErrorBanner from "../components/ErrorBanner.jsx";
+import { warnBeforeUnload } from "../utils/beforeUnload.js";
 
 export default function TopicEntryView() {
   const [topic, setTopic] = useState("");
@@ -24,6 +25,9 @@ export default function TopicEntryView() {
     submittingRef.current = true;
     setLoading(true);
     setError(null);
+    // See ChatPanel's identical guard - a reload while this POST is in flight silently
+    // drops the whole "start interview" request with no error shown.
+    window.addEventListener("beforeunload", warnBeforeUnload);
     try {
       const submittedTopic = topic.trim();
       const res = await startInterview(submittedTopic);
@@ -34,6 +38,8 @@ export default function TopicEntryView() {
       setError(err);
       setLoading(false);
       submittingRef.current = false;
+    } finally {
+      window.removeEventListener("beforeunload", warnBeforeUnload);
     }
   }
 

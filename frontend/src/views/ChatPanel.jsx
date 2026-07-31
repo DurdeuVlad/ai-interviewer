@@ -14,6 +14,7 @@ import TypewriterText from "../components/TypewriterText.jsx";
 import InterviewSummaryCard from "../components/InterviewSummaryCard.jsx";
 import TopicEntryView from "./TopicEntryView.jsx";
 import { notifyInterviewsChanged } from "../utils/interviewEvents.js";
+import { warnBeforeUnload } from "../utils/beforeUnload.js";
 
 export default function ChatPanel({ onMenuClick }) {
   const { id } = useParams();
@@ -136,6 +137,11 @@ export default function ChatPanel({ onMenuClick }) {
     lastAnswerRef.current = submittedAnswer;
     setLoading(true);
     setError(null);
+    // A reload/close while this request is still in flight aborts it outright - the backend
+    // never receives the answer, and the same still-open question correctly reappears on
+    // reload (no corruption, just a silently lost submission). Warn instead of letting that
+    // happen invisibly.
+    window.addEventListener("beforeunload", warnBeforeUnload);
     try {
       const res = await submitAnswer(id, submittedAnswer);
       setTranscript((prev) => [
@@ -155,6 +161,7 @@ export default function ChatPanel({ onMenuClick }) {
     } finally {
       setLoading(false);
       submittingRef.current = false;
+      window.removeEventListener("beforeunload", warnBeforeUnload);
     }
   }
 
