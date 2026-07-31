@@ -40,17 +40,6 @@ Env-config default only (e.g. `LLM_PROVIDER=claude|gemini|openai|mock` in backen
 
 Open question: exact turn-loop max-turns safety cap value — decide during backend design.
 
-## Build phasing
-Terminal-first. The assignment explicitly allows a terminal UI, so that's the real MVP:
-build and thoroughly test a CLI-driven backend (`cli.py` entry point over the same
-`services`/`providers` layer) before touching FastAPI routes or a web frontend. This de-risked
-the submission: a polished terminal tool was a complete, scoreable deliverable on its own before
-phase 2 started.
-
-Phase 2 (FastAPI HTTP layer + React frontend) is now built as a second entry point over the same
-services — no business logic duplicated between the CLI and the API. See the "Frontend" stack
-entry above for the Vue→React pivot.
-
 ## Storage & export
 SQLite remains the durable store for running an interview across turns, but it's not the
 deliverable format. Every completed interview is also exported to:
@@ -58,10 +47,6 @@ deliverable format. Every completed interview is also exported to:
   JSON, text file, or database" line
 - **PDF** (`exports/{id}.pdf`) — extra polish, rendered via `fpdf2` (lightweight, no headless
   browser dependency)
-
-## Non-goals (MVP)
-- No auth / multi-user
-- No Postgres/hosted DB — SQLite is enough for scope
 
 ## Docker (optional, not the primary way to run this)
 `backend/Dockerfile`, `frontend/Dockerfile` (multi-stage, nginx-served static build), and root
@@ -77,6 +62,21 @@ compose` invocation hits a buildkit/cgroup permission error unrelated to these D
 `DOCKER_BUILDKIT=0 COMPOSE_DOCKER_CLI_BUILD=0 docker compose up --build` (legacy builder) works
 around it there. A normal Docker Desktop install shouldn't need that workaround.
 
+## Non-goals (MVP)
+- No auth / multi-user
+- No Postgres/hosted DB — SQLite is enough for scope
+
+## Build phasing
+Terminal-first. The assignment explicitly allows a terminal UI, so that's the real MVP:
+build and thoroughly test a CLI-driven backend (`cli.py` entry point over the same
+`services`/`providers` layer) before touching FastAPI routes or a web frontend. This de-risked
+the submission: a polished terminal tool was a complete, scoreable deliverable on its own before
+phase 2 started.
+
+Phase 2 (FastAPI HTTP layer + React frontend) is now built as a second entry point over the same
+services — no business logic duplicated between the CLI and the API. See the "Frontend" stack
+entry above for the Vue→React pivot.
+
 ## Quality bar priorities (from assignment's "what we're evaluating")
 Ranked equally, all must be strong: code clarity/structure, prompt design/LLM interaction, UX (even terminal), overall polish.
 
@@ -86,7 +86,7 @@ Ranked equally, all must be strong: code clarity/structure, prompt design/LLM in
 - **Polish over breadth**: finish the core loop + summary fully before touching bonus sentiment/keyword analysis. Bonus sentiment can be a lightweight lexicon-based lib (e.g. VADER/TextBlob) rather than training/hosting a BERT model — out of scope to train anything.
 
 ## Prompt engineering method
-Prompts are not hand-tuned by trial and error. A standalone eval harness (`prompt_lab/`, own `uv` project, not part of shipped app) tests candidate system prompts against scripted scenarios and scores them on a fixed rubric, judged by an LLM grader — transparent, repeatable, same rubric every time (see `prompt_lab/README.md` once built).
+Prompts are not hand-tuned by trial and error. A standalone eval harness (`prompt_lab/`, own `uv` project, not part of shipped app) tests candidate system prompts against scripted scenarios and scores them on a fixed rubric, judged by an LLM grader — transparent, repeatable, same rubric every time (see `prompt_lab/README.md`).
 
 The shipped prompt was also tested directly against the real orchestrator + real providers with
 adversarial scenarios (prompt injection, guardrail off-topic, adversarial pushback, low-effort
