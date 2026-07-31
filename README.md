@@ -60,3 +60,16 @@ cd backend && uv run pytest
 ```bash
 cd frontend && npm run test
 ```
+
+**Docker (optional, both services in one command):**
+
+```bash
+docker compose up --build
+```
+
+Backend on `http://localhost:8000`, frontend on `http://localhost:5173`. Defaults to
+`LLM_PROVIDER=mock` — set real provider vars in a `.env` file at the repo root (read
+automatically by `docker compose`, e.g. `LLM_PROVIDER=openai`, `OPENAI_API_KEY=...`) for a real
+interview. DB and exports persist in named volumes (`backend_db`, `backend_exports`) across
+restarts. Verified end-to-end (full interview through the browser against the containerized
+stack, see [docs/decisions.md](docs/decisions.md)). See [docker-compose.yml](docker-compose.yml).

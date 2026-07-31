@@ -62,16 +62,20 @@ deliverable format. Every completed interview is also exported to:
 ## Non-goals (MVP)
 - No auth / multi-user
 - No Postgres/hosted DB — SQLite is enough for scope
-- No Docker/containerization — tried and removed before submission. A `backend/Dockerfile`,
-  `frontend/Dockerfile` (multi-stage, nginx-served static build), and root `docker-compose.yml`
-  were built and each image built and ran individually (`docker build` + `docker run`, verified
-  via curl against both containers). `docker compose up` itself was never verified end-to-end —
-  it failed in the dev sandbox on a buildkit/cgroup permission error unrelated to the Dockerfiles
-  themselves — so the full two-container flow through the actual UI was never confirmed working.
-  Rather than ship an unverified path, and since the assignment explicitly scopes this as a
-  "small" tool evaluated on terminal/simple-web UX rather than deployment, all Docker files were
-  removed pre-submission. `uv sync` / `npm install` + `uv run` / `npm run dev` remain the only
-  supported way to run the app.
+
+## Docker (optional, not the primary way to run this)
+`backend/Dockerfile`, `frontend/Dockerfile` (multi-stage, nginx-served static build), and root
+`docker-compose.yml` — added as a nice-to-have on top of the assignment's own requirements.
+`uv sync`/`npm run dev` remain the primary, always-supported way to run the app; Docker is an
+alternative, not a replacement.
+
+Verified end-to-end, not just that the images build: `docker compose up --build`, then a full
+interview (topic → 3 answers → summary with themes/sentiment/keywords/exports) driven through
+the actual browser UI against the containerized frontend talking to the containerized backend,
+console clean throughout. One environment-specific note: the dev sandbox's default `docker
+compose` invocation hits a buildkit/cgroup permission error unrelated to these Dockerfiles;
+`DOCKER_BUILDKIT=0 COMPOSE_DOCKER_CLI_BUILD=0 docker compose up --build` (legacy builder) works
+around it there. A normal Docker Desktop install shouldn't need that workaround.
 
 ## Quality bar priorities (from assignment's "what we're evaluating")
 Ranked equally, all must be strong: code clarity/structure, prompt design/LLM interaction, UX (even terminal), overall polish.

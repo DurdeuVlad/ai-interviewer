@@ -34,6 +34,17 @@ npm run test
 normalization, `ErrorBanner`'s 409-reason distinction (already-ended vs. duplicate-answer),
 `ChatBubble` alignment, and the `interviewEvents` window bridge.
 
+## Docker
+
+```bash
+docker build -t ai-interviewer-frontend --build-arg VITE_API_BASE=http://localhost:8000 .
+docker run -p 5173:80 ai-interviewer-frontend
+```
+
+`VITE_API_BASE` is baked into the static build at image-build time (Vite doesn't read `VITE_*`
+vars at runtime), so it must be passed as a `--build-arg`, not `-e`. Or `docker compose up
+--build` from the repo root — see [../docker-compose.yml](../docker-compose.yml).
+
 ## Layout
 
 Full-screen, two-pane messaging-app layout: a conversation sidebar plus one chat panel, two
