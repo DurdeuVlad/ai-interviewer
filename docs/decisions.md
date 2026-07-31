@@ -63,6 +63,16 @@ deliverable format. Every completed interview is also exported to:
 ## Non-goals (MVP)
 - No auth / multi-user
 - No Postgres/hosted DB — SQLite is enough for scope
+- No Docker/containerization — tried and removed before submission. A `backend/Dockerfile`,
+  `frontend/Dockerfile` (multi-stage, nginx-served static build), and root `docker-compose.yml`
+  were built and each image built and ran individually (`docker build` + `docker run`, verified
+  via curl against both containers). `docker compose up` itself was never verified end-to-end —
+  it failed in the dev sandbox on a buildkit/cgroup permission error unrelated to the Dockerfiles
+  themselves — so the full two-container flow through the actual UI was never confirmed working.
+  Rather than ship an unverified path, and since the assignment explicitly scopes this as a
+  "small" tool evaluated on terminal/simple-web UX rather than deployment, all Docker files were
+  removed pre-submission. `uv sync` / `npm install` + `uv run` / `npm run dev` remain the only
+  supported way to run the app.
 
 ## Quality bar priorities (from assignment's "what we're evaluating")
 Ranked equally, all must be strong: code clarity/structure, prompt design/LLM interaction, UX (even terminal), overall polish.
