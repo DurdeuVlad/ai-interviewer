@@ -186,4 +186,11 @@ def get_history(session: Session, interview_id: int) -> list[HistoryMessage]:
 
 
 def list_interviews(session: Session) -> list[Interview]:
-    return list(session.scalars(select(Interview).order_by(Interview.created_at.desc())))
+    # id as a tiebreaker, not just created_at: two interviews created back-to-back can land on
+    # the exact same timestamp under coarse clock resolution (observed on Windows), which would
+    # otherwise make the sidebar's ordering nondeterministic between two real interviews too.
+    return list(
+        session.scalars(
+            select(Interview).order_by(Interview.created_at.desc(), Interview.id.desc())
+        )
+    )
