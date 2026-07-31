@@ -1,5 +1,7 @@
 # AI Interviewer
 
+**v1.0.0** — submission snapshot.
+
 Mini "AI Interviewer" — conducts a short AI-powered interview on a chosen topic via a
 conversational agentic loop, then produces a themed summary. Built for the assignment in
 [docs/AIAssignment.pdf](docs/AIAssignment.pdf).
@@ -29,28 +31,42 @@ See:
   Mock (implemented), Claude (dropped for now, no API key — drop-in addition later via the same
   strategy pattern)
 
+## Requirements
+
+- Python 3.12+ and [`uv`](https://docs.astral.sh/uv/) (backend)
+- Node 18+ and npm (frontend, only if you want the web UI)
+- Docker + Docker Compose (optional, only for the Docker path below)
+- No API key is required to try it — it runs out of the box against a deterministic mock
+  provider (`LLM_PROVIDER=mock`, the default in `.env.example`). Add a `GEMINI_API_KEY` or
+  `OPENAI_API_KEY` only if you want a real LLM-driven interview.
+
 ## Running it
 
-**Terminal:**
+**Terminal** (the core deliverable — no API key needed to try it):
 
 ```bash
 cd backend
-cp .env.example .env   # fill in GEMINI_API_KEY and/or OPENAI_API_KEY, or leave LLM_PROVIDER=mock
+cp .env.example .env
 uv sync
 uv run python -m app.cli
 ```
 
-**Web UI** (two terminals):
+**Web UI** — needs the backend running first (two terminals):
 
 ```bash
-cd backend && uv run uvicorn app.main:app --reload --port 8000
+cd backend
+cp .env.example .env
+uv sync
+uv run uvicorn app.main:app --reload --port 8000
 ```
 ```bash
-cd frontend && npm install && npm run dev
+cd frontend
+npm install
+npm run dev
 ```
 
-Then open `http://localhost:5173`. See [backend/README.md](backend/README.md) and
-[frontend/README.md](frontend/README.md) for details.
+Then open `http://localhost:5173` in a browser. See [backend/README.md](backend/README.md) and
+[frontend/README.md](frontend/README.md) for more detail on each half.
 
 **Tests:**
 
