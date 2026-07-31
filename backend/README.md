@@ -3,7 +3,7 @@
 FastAPI + `uv` backend for the AI Interviewer. Two entry points over the same services layer:
 a terminal CLI (phase 1) and an HTTP API (phase 2, for the [`../frontend`](../frontend) React
 app). Neither duplicates business logic — both drive `app/services/orchestrator.py` etc. See
-[../docs/implementation-plan.md](../docs/implementation-plan.md) for the full build plan.
+[../docs/decisions.md](../docs/decisions.md) for the architecture rationale.
 
 ## Setup
 
@@ -58,8 +58,8 @@ FastAPI's `TestClient`.
 - `app/services/orchestrator.py` — checklist state machine, enforces the 3-turn floor / 8-turn cap
 - `app/services/analysis.py` — final summary + bonus keyword extraction / VADER sentiment
 - `app/services/export.py` — JSON + PDF export per interview, written to `exports/`
-- `app/prompts/` — the two system prompts (interviewer, analyst), copied from the graded
-  `prompt_lab/` variants
+- `app/prompts/` — the two system prompts (interviewer, analyst), candidate variants produced
+  and tested via the standalone `prompt_lab/` harness
 - `app/cli.py` — terminal entry point (phase 1)
 - `app/main.py` / `app/routes/interviews.py` / `app/api_schemas.py` — HTTP entry point (phase 2),
   thin routes over the same services, distinct request/response DTOs from the internal

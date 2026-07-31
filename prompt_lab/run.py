@@ -4,8 +4,8 @@ Prompt evaluation harness (Gemini).
 Runs each (interviewer prompt variant x model x scenario) combination through
 a full scripted interview, then runs the analyst prompt over the resulting
 transcript. Saves one JSON file per combination to results/raw/ for later
-grading (grading is a separate, manual/subagent step against rubric.md — this
-script only produces raw transcripts, it does not score anything).
+grading (grading is a separate, manual step against rubric.md — this script
+only produces raw transcripts, it does not score anything).
 
 Usage:
     uv run run.py

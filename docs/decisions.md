@@ -4,8 +4,8 @@ Source spec: [AIAssignment.pdf](AIAssignment.pdf)
 
 ## Stack
 - Frontend: React + Vite + MUI (small SPA) — **changed from the original Vue.js choice** when
-  phase 2 actually started; user asked for a Material Design look (Material UI), which is
-  React-specific, and opted to pivot the whole frontend framework rather than use a Vue
+  phase 2 actually started, switching to Material UI (React-specific) for a cleaner Material
+  Design look, and pivoting the whole frontend framework rather than reaching for a Vue
   equivalent (Vuetify). No backend impact — the API/schemas were designed framework-agnostic.
 - Backend: FastAPI (Python), package manager: `uv`
 - DB: SQLite (via SQLAlchemy) — stores interviews, questions, answers, summary
@@ -15,8 +15,7 @@ Source spec: [AIAssignment.pdf](AIAssignment.pdf)
   - `MockProvider` (canned/deterministic responses — no network, for dev/demo/tests) — implemented
   - `ClaudeProvider` (Anthropic) — **dropped for now**, no API key available to test against. The
     strategy pattern makes this a drop-in addition later (implement `LLMProvider`, register in
-    `providers/factory.py`) — not a design change, just deferred work. `docs/external/anthropic.md`
-    stays as the reference for whenever it's picked back up.
+    `providers/factory.py`) — not a design change, just deferred work.
 
 ## Repo layout
 Monorepo: `backend/` (FastAPI + uv) and `frontend/` (React + Vite) in one repo.
@@ -46,7 +45,7 @@ Terminal-first. The assignment explicitly allows a terminal UI, so that's the re
 build and thoroughly test a CLI-driven backend (`cli.py` entry point over the same
 `services`/`providers` layer) before touching FastAPI routes or a web frontend. This de-risked
 the submission: a polished terminal tool was a complete, scoreable deliverable on its own before
-phase 2 started. See [implementation-plan.md](implementation-plan.md) for the full build order.
+phase 2 started.
 
 Phase 2 (FastAPI HTTP layer + React frontend) is now built as a second entry point over the same
 services — no business logic duplicated between the CLI and the API. See the "Frontend" stack
@@ -96,7 +95,7 @@ on incidental model alignment.
 - (resolved) Include MockProvider — yes, for cost-free dev/demo/testing
 - (resolved) "codex pass" = OpenAI GPT provider
 - (resolved) "small SQL-like db" = SQLite
-- (resolved) Min-turns floor = 3, max-turns cap = 8 (see implementation-plan.md) — closes the
+- (resolved) Min-turns floor = 3, max-turns cap = 8 — closes the
   gap where the model could otherwise end the interview after 1-2 turns, violating the
   assignment's "3-5 questions" requirement
 - (resolved) Provider failure mid-interview: retry once, then fail loudly — no silent fallback

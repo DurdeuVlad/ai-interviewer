@@ -56,14 +56,12 @@ Re-verified against OpenAI on the same scenario after the change: it now decline
 letter and script requests and never answers the medical question, redirecting back to the
 interview topic each time.
 
-## Pass 2: subagent-embodied personas, real transcripts
+## Pass 2: persona-driven scenarios, real transcripts
 
-Follow-up round using dynamic personas (a subagent improvising realistic in-character answers,
-reacting to whatever the model actually asked, rather than a fixed script) run against the real
-CLI (`app/cli.py`) with `OpenAIProvider`. Evidence JSON exports (transcript + summary, `.pdf`
-intentionally not committed — see [test-evidence/](test-evidence/)) are referenced below by
-filename. Persona definitions and criteria were handed to independent subagents; findings here
-are consolidated from their reports plus my own re-runs used to capture evidence.
+Follow-up round using dynamic personas (improvised in-character answers reacting to whatever the
+model actually asked, rather than a fixed script) run against the real CLI (`app/cli.py`) with
+`OpenAIProvider`. Evidence JSON exports (transcript + summary, `.pdf` intentionally not
+committed — see [test-evidence/](test-evidence/)) are referenced below by filename.
 
 | Persona | Tests | Result | Evidence |
 |---|---|---|---|
@@ -156,5 +154,5 @@ right.
   prompt changes again, re-run the same scenarios against both providers before trusting the
   result.
 - Gemini was not re-tested against the newer scenarios in this pass (injection scoring, false
-  positives, the four subagent personas) — all real-provider evidence here is OpenAI only. The
+  positives, the four persona scenarios) — all real-provider evidence here is OpenAI only. The
   original pass-1 scenarios were tested against both.

@@ -14,9 +14,7 @@ Both phases working end-to-end against real providers:
 
 See:
 - [docs/decisions.md](docs/decisions.md) — architecture decisions and rationale
-- [docs/implementation-plan.md](docs/implementation-plan.md) — concrete build plan (DB schema, API/CLI contract, build order)
 - [docs/edge-case-testing.md](docs/edge-case-testing.md) — adversarial/robustness test results, with real transcript evidence in [docs/test-evidence/](docs/test-evidence/)
-- [docs/external/](docs/external/) — reference docs for the stack (Gemini/OpenAI/Anthropic APIs, uv, FastAPI, SQLAlchemy)
 - [backend/README.md](backend/README.md) — how to run the CLI and/or the API
 - [frontend/README.md](frontend/README.md) — how to run the web UI
 - [prompt_lab/](prompt_lab/) — standalone prompt-evaluation harness (separate from the shipped app)
