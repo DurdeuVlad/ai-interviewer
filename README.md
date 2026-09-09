@@ -1,7 +1,5 @@
 # AI Interviewer
 
-**v1.0.0** - submission snapshot.
-
 Mini "AI Interviewer" - conducts a short AI-powered interview on a chosen topic via a
 conversational agentic loop, then produces a themed summary. Built for the assignment in
 [docs/AIAssignment.pdf](docs/AIAssignment.pdf).
